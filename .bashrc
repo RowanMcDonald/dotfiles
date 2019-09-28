@@ -155,11 +155,6 @@ alias android='open -a /Applications/Android\ Studio.app .'
 notify() {
 				osascript -e "display notification \"$@\" with title \"iterm notification\""
 }
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-
-source "$HOME/.bootstrap/env.sh"
-
-alias sopsorific="secret_editor"
 
 eval "$(direnv hook bash)"
 
@@ -186,6 +181,6 @@ function kill_conn() {
 }
 
 #==================================
-# This solves the issue of "There are 3 other sessions using the database"
+# very good plugin
 #==================================
 eval $(thefuck --alias)
