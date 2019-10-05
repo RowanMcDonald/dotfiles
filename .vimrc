@@ -79,6 +79,11 @@ Plug 'prettier/vim-prettier', {
 
 Plug 'janko-m/vim-test' " language agnostic test running
 Plug 'jamestthompson3/vim-jest'
+
+" Text obj
+Plug 'glts/vim-textobj-comment'
+ " Plug 'kana/vim-textobj-user' required above
+
 call plug#end()
 
 ""======================

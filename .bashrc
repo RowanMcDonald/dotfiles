@@ -181,6 +181,9 @@ function kill_conn() {
 }
 
 #==================================
-# very good plugin
+# very good plugins
 #==================================
 eval $(thefuck --alias)
+eval "$(fasd --init auto)"
+
+source "$HOME/.bootstrap/env.sh"

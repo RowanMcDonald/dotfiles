@@ -1,6 +1,7 @@
 export PATH="$HOME/.bin:$HOME/.rbenv/bin:$PATH"
 export EDITOR=/usr/local/bin/nvim
 export INPUTRC="$HOME/.inputrc"
+eval "$(rbenv init -)"
 
 [ -f ~/.bashrc ] && source ~/.bashrc
 

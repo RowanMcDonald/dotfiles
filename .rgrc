@@ -1,0 +1,9 @@
+# exclude
+# --glob
+# !vendor/*
+
+--type-add
+web:*.{html,css,js,erb}*
+
+# Because who cares about case!?
+# --smart-case
