@@ -6,6 +6,7 @@ ENV['HOME'] ||= ENV['USERPROFILE'] || File.dirname(__FILE__)
   begin
     require lib
   rescue LoadError
+    puts 'lib not installed'
   end
 end
 

@@ -1,3 +1,1 @@
-$if Ruby
-  "\C-o": "\C-x\C-e"
-$endif
+

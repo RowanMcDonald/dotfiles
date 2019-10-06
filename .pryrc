@@ -11,5 +11,6 @@ Gem.path.each do |gemset|
   $:.concat(Dir.glob("#{gemset}/gems/pry-*/lib"))
 end if defined?(Bundler)
 $:.uniq!
+require 'pry-editline'
 
 Pry.load_plugins if Pry.config.should_load_plugins

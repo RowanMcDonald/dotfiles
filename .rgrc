@@ -1,6 +1,6 @@
 # exclude
-# --glob
-# !vendor/*
+--glob
+!vendor/*
 
 --type-add
 web:*.{html,css,js,erb}*

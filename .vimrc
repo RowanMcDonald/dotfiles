@@ -14,23 +14,19 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-endwise'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'szw/vim-maximizer'
+" Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-commentary'
-Plug 'dbakker/vim-projectroot'
-Plug 'easymotion/vim-easymotion'
-Plug 'junegunn/vim-easy-align'
-Plug 'jremmen/vim-ripgrep'
+" Plug 'dbakker/vim-projectroot'
+" Plug 'easymotion/vim-easymotion'
+Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar' " netrw+
 Plug 'arthurxavierx/vim-caser' " change casing
 
 Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-dispatch'
-Plug 'radenling/vim-dispatch-neovim'
 " Plug 'w0rp/ale'
 
 " integrations
-Plug 'ron89/thesaurus_query.vim'
 Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rhubarb' " Enables :Gbrowse
 Plug 'kristijanhusak/vim-carbon-now-sh'
@@ -40,13 +36,12 @@ Plug 'mattn/gist-vim'
 " look and feel
 Plug 'junegunn/goyo.vim'
 Plug 'sleep/limelight.vim'
-Plug 'junegunn/seoul256.vim'
 Plug 'joshdick/onedark.vim'
-Plug 'ryanoasis/vim-devicons'
+" Plug 'ryanoasis/vim-devicons'
 Plug 'itchyny/lightline.vim' " status line
 
 " snippits
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 
@@ -116,8 +111,10 @@ set shiftwidth=2
 set expandtab
 let mapleader = "\<SPACE>"
 
-set number relativenumber
+set relativenumber
+set numberwidth=3
 set nohlsearch
+set incsearch
 set notermguicolors
 set splitbelow splitright
 set backspace=indent,eol,start
@@ -209,21 +206,23 @@ let g:limelight_eop = '\ze\n^\s'
 "========================
 " ctrl_p
 "========================
-let g:ctrlp_user_command = 'fd --type f --color=never "" %s'
-let g:ctrlp_custom_ignore = {
-												\ 'dir':  '\.git$|vcr\|vendor\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|log\|tmp$',
-												\ 'file': '\.exe$\|\.so$\|\.dat$'
-												\ }
-let g:ctrlp_root_markers = ['Gemfile', 'package.json']
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_use_caching = 0
-let g:ctrlp_show_hidden = 1
+" https://www.reddit.com/r/vim/comments/83h31q/speed_up_ctrlp_with_fd/
+" let g:ctrlp_user_command = 'fd --type f --color=never "" %s'
+" let g:ctrlp_custom_ignore = {
+" 												\ 'dir':  '\.git$|vcr\|vendor\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|log\|tmp$',
+" 												\ 'file': '\.exe$\|\.so$\|\.dat$'
+" 												\ }
+" let g:ctrlp_root_markers = ['Gemfile', 'package.json']
+" let g:ctrlp_working_path_mode = 'r'
+" let g:ctrlp_use_caching = 0
+" let g:ctrlp_show_hidden = 1
 
 
 "========================
 " Lightline
 "========================
 " hides --insert--
+autocmd VimEnter * call lightline#enable()
 set noshowmode
 let g:lightline = {
       \ 'colorscheme': 'onedark',
@@ -240,18 +239,18 @@ let g:lightline = {
 "==========================
 " Thesaurus backends
 "==========================
-let g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"
-let g:tq_enabled_backends=["thesaurus_com", "mthesaur_txt", "datamuse_com",]
-let g:tq_online_backends_timeout = 0.6
+" let g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"
+" let g:tq_enabled_backends=["thesaurus_com", "mthesaur_txt", "datamuse_com",]
+" let g:tq_online_backends_timeout = 0.6
 
 "==========================
 " Easy Align
 "==========================
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+" xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" nmap ga <Plug>(EasyAlign)
 
 "==========================
 " Make splits easier
@@ -298,15 +297,13 @@ nmap <silent> <Leader>v :TestVisit<CR>
 " let test#ruby#use_binstubs = 0
 " let test#ruby#bundle_exec = 1
 " let g:rspec_command = "!clear; ( cd $(find `( SPEC='{spec}'; CP=${SPEC\\%/*}; while [ -n \"$CP\" ] ; do echo $CP; CP=${CP\\%/*}; done; echo / ) ` -mindepth 1 -maxdepth 1 -type d -name spec)/..; bin/rspec {spec})"
-" let g:test#preserve_screen = 1
 
 " let test#typescript#jest#executable = "SKIP_PREFLIGHT_CHECK=true $(yarn bin)/rescripts test"
+"
 " Map tricky escape sequence to control o
 if has('nvim')
   tmap <C-o> <C-\><C-n>
 endif
-
-
 
 "=========================
 " Gist
@@ -347,49 +344,42 @@ let g:rails_projections = {
 "=========================
 "  Ale configurations
 "=========================
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '!'
-let g:ale_sign_warning = '•'
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 1
-let g:ale_ruby_rubocop_executable = 'bundle'
-let g:ale_linters = {
-\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
-\   'typescript': ['tsserver', 'tslint'],
-\   'rust': ['cargo', 'rls'],
-\}
-" let g:ale_linters_ignore = {'typescript': ['tslint']}
-let g:ale_typescript_tsserver_use_global = 1
-let g:ale_typescript_tslint_use_global = 1
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'rust': ['rustfmt']
-\}
-let g:ale_fix_on_save = 1
-" adjust colors
-" highlight link ALEError Error
-highlight link ALEStyleError Error
-highlight ALEErrorSign guifg=#1E0010
-highlight link ALEWarning WarningMsg
-highlight link ALEStyleWarning WarningMsg
-highlight ALEWarningSign guifg=#FFFFFF
+" let g:ale_sign_column_always = 1
+" let g:ale_sign_error = '!'
+" let g:ale_sign_warning = '•'
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_enter = 1
+" let g:ale_ruby_rubocop_executable = 'bundle'
+" let g:ale_linters = {
+" \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
+" \   'typescript': ['tsserver', 'tslint'],
+" \   'rust': ['cargo', 'rls'],
+" \}
+" " let g:ale_linters_ignore = {'typescript': ['tslint']}
+" let g:ale_typescript_tsserver_use_global = 1
+" let g:ale_typescript_tslint_use_global = 1
+" let g:ale_fixers = {
+" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+" \   'rust': ['rustfmt']
+" \}
+" let g:ale_fix_on_save = 1
+" " adjust colors
+" " highlight link ALEError Error
+" highlight link ALEStyleError Error
+" highlight ALEErrorSign guifg=#1E0010
+" highlight link ALEWarning WarningMsg
+" highlight link ALEStyleWarning WarningMsg
+" highlight ALEWarningSign guifg=#FFFFFF
 
-nmap <leader>af <Plug>(ale_fix)
-nmap <leader>al <Plug>(ale_lint)
+" nmap <leader>af <Plug>(ale_fix)
+" nmap <leader>al <Plug>(ale_lint)
 
 "=========================
 "  scratch configurations
 "=========================
 
-let g:scratch_persistence_file = '~/.config/nvim/scratch/.rb'
+" let g:scratch_persistence_file = '~/.config/nvim/scratch/.rb'
 
-
-"=========================
-"  Vim Test config
-"=========================
-" this isn't working :/
-let test#neovim#term_position = "topleft"
-let g:test#preserve_screen = 1
 
 "=========================
 "  NVIM terminal config https://github.com/onivim/oni/issues/962
@@ -418,3 +408,72 @@ let g:user_emmet_settings = {
 "=========================
 let g:vimrubocop_keymap = 0
 nmap <Leader>r :RuboCop -a<CR>
+
+"=========================
+" ruby editing helpers
+"=========================
+
+map <Leader>d orequire 'pry'; binding.pry<esc>:w<cr>
+
+"=========================
+" FZF support
+"=========================
+" https://github.com/junegunn/fzf.vim/issues/59
+function! s:update_fzf_colors()
+  let rules =
+  \ { 'fg':      [['Normal',       'fg']],
+    \ 'bg':      [['Normal',       'bg']],
+    \ 'hl':      [['Comment',      'fg']],
+    \ 'fg+':     [['CursorColumn', 'fg'], ['Normal', 'fg']],
+    \ 'bg+':     [['CursorColumn', 'bg']],
+    \ 'hl+':     [['Statement',    'fg']],
+    \ 'info':    [['PreProc',      'fg']],
+    \ 'prompt':  [['Conditional',  'fg']],
+    \ 'pointer': [['Exception',    'fg']],
+    \ 'marker':  [['Keyword',      'fg']],
+    \ 'spinner': [['Label',        'fg']],
+    \ 'header':  [['Comment',      'fg']] }
+  let cols = []
+  for [name, pairs] in items(rules)
+    for pair in pairs
+      let code = synIDattr(synIDtrans(hlID(pair[0])), pair[1])
+      if !empty(name) && code > 0
+        call add(cols, name.':'.code)
+        break
+      endif
+    endfor
+  endfor
+  let s:orig_fzf_default_opts = get(s:, 'orig_fzf_default_opts', $FZF_DEFAULT_OPTS)
+  let $FZF_DEFAULT_OPTS = s:orig_fzf_default_opts .
+        \ empty(cols) ? '' : (' --color='.join(cols, ','))
+endfunction
+
+augroup _fzf
+  autocmd!
+  autocmd ColorScheme * call <sid>update_fzf_colors()
+augroup END
+
+let g:fzf_layout = { 'window': '15new' }
+
+autocmd! FileType fzf
+autocmd  FileType fzf set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+let g:rg_command = '
+  \ rg --line-number --smart-case --hidden
+  \ -g "*.{sql,R,rs,java,jbuilder,js,jsx,json,php,ctp,css,scss,md,styl,jade,html,config,py,cpp,c,go,hs,rb,erb,conf}"
+  \ -g "!{public,.git,node_modules,vendor}/*" '
+
+" imap <c-x><c-k> <plug>(fzf-complete-word)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
+" imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+" imap <c-x><c-l> <plug>(fzf-complete-line)
+
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+" open fzf with rg instead of ctrl p
+nnoremap <c-p> :Rg<cr>
+" open fzf with rg instead of ctrl p (but with word under cursor
+nnoremap <silent> <Leader>p :Rg <C-R><C-W><CR>
+
+" what if vim opened with fzf instead of netrw
