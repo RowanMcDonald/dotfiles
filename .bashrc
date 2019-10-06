@@ -187,3 +187,5 @@ eval $(thefuck --alias)
 eval "$(fasd --init auto)"
 
 source "$HOME/.bootstrap/env.sh"
+alias see='ruby --disable=gems ~/.bin/see_rails.rb'
+alias seer='ruby ~/.bin/see_rails.rb'
