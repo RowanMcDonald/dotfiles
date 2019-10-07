@@ -39,6 +39,7 @@ Plug 'sleep/limelight.vim'
 Plug 'joshdick/onedark.vim'
 " Plug 'ryanoasis/vim-devicons'
 Plug 'itchyny/lightline.vim' " status line
+Plug 'mhinz/vim-startify'
 
 " snippits
 " Plug 'SirVer/ultisnips'
@@ -118,6 +119,7 @@ set incsearch
 set notermguicolors
 set splitbelow splitright
 set backspace=indent,eol,start
+set undofile
 set undodir=~/.config/nvim/undodir
 set directory=~/.config/nvim/tmp,.
 
@@ -222,7 +224,6 @@ let g:limelight_eop = '\ze\n^\s'
 " Lightline
 "========================
 " hides --insert--
-autocmd VimEnter * call lightline#enable()
 set noshowmode
 let g:lightline = {
       \ 'colorscheme': 'onedark',
@@ -290,7 +291,7 @@ let g:netrw_winsize = 40
 "=========================
 nmap <silent> <Leader>n :TestNearest<CR>
 nmap <silent> <Leader>f :TestFile<CR>
-nmap <silent> <Leader>s :TestSuite<CR>
+" nmap <silent> <Leader>s :TestSuite<CR>
 nmap <silent> <Leader>l :TestLast<CR>
 nmap <silent> <Leader>v :TestVisit<CR>
 
@@ -476,4 +477,12 @@ nnoremap <c-p> :Rg<cr>
 " open fzf with rg instead of ctrl p (but with word under cursor
 nnoremap <silent> <Leader>p :Rg <C-R><C-W><CR>
 
-" what if vim opened with fzf instead of netrw
+"===============================
+" Startify options
+"===============================
+nnoremap <Leader>s :Startify<cr>
+let g:startify_custom_header_quotes = [
+    \ ["Moo"],
+    \ ]
+
+

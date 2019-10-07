@@ -1,5 +1,8 @@
 # exclude
 --glob
+!public/*
+
+--glob
 !vendor/*
 
 --type-add
