@@ -86,6 +86,7 @@ Plug 'glts/vim-textobj-comment'
 Plug 'junegunn/vim-xmark', { 'do': 'make' }
 Plug 'machakann/vim-highlightedyank'
 Plug 'junegunn/vim-easy-align'
+" Plug 'embear/vim-localvimrc' " respect local vimrc
 
 
 call plug#end()
@@ -120,7 +121,8 @@ set shiftwidth=2
 set expandtab
 let mapleader = "\<SPACE>"
 
-set relativenumber
+" set relativenumber
+set nonumber
 set numberwidth=3
 set nohlsearch
 set incsearch
@@ -521,6 +523,14 @@ nnoremap <Leader>s :Startify<cr>
 let g:startify_custom_header_quotes = [
     \ ["Moo"],
     \ ]
+let g:startify_lists = [
+      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'files',     'header': ['   MRU']            },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+let g:startify_enable_special = 0
 
 "==============================
 " Highlighted yank
@@ -659,8 +669,8 @@ endfunction
 nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -720,4 +730,3 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 let g:coc_node_path = "/Users/rowanmcdonald/.nodenv/versions/8.15.1/bin/node"
-

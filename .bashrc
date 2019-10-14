@@ -33,7 +33,7 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
 
 # alias download_all=`curl -u <token>:x-oauth-basic -s https://api.github.com/orgs/<organization>/repos\?per_page\=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'`
-alias gfx='git clean -fx'
+alias gfx='git clean -fdx'
 
 
 ##====================
