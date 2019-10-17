@@ -456,6 +456,11 @@ nmap <Leader>r :RuboCop -a<CR>
 map <Leader>d orequire 'pry'; binding.pry<esc>:w<cr>
 
 "=========================
+" log editing helpers
+"=========================
+map <Leader>t :put =strftime('# %a %d %b %Y')<cr>o
+
+"=========================
 " FZF support
 "=========================
 " https://github.com/junegunn/fzf.vim/issues/59

@@ -25,7 +25,7 @@ alias gsl='git shortlog -sn'
 alias gcm='git commit -m'
 alias gca='git commit -a'
 alias gcb='git checkout -b'
-# alias b="git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+alias b="git for-each-ref --sort='-authordate' --format='%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 alias ga='git add .; git status -s'
 alias cl="git checkout master; git fetch; git pull"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
@@ -164,8 +164,6 @@ eval $(thefuck --alias)
 # eval "$(fasd --init auto)"
 
 source "$HOME/.bootstrap/env.sh"
-alias see='ruby --disable=gems ~/.bin/see_rails.rb'
-alias seer='ruby ~/.bin/see_rails.rb'
 
 ##===================================
 # FZF stuff
@@ -196,8 +194,8 @@ fgl() (
   figlet -f "$font" "$@" | pbcopy
 )
 
-# fco - checkout git branch/tag
-gco() {
+# co - checkout git branch/tag
+co() {
   local tags branches target
   tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
   branches=$(
@@ -261,12 +259,16 @@ stash() {
   cut -d: -f1
 }
 
-# # if [[ $- =~ i ]]; then
-# #   bind '"\er": redraw-current-line'
-# #   bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
-# #   bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
-# #   bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
-# #   bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
-# #   bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
-# #   bind '"\C-g\C-s": "$(stash)\e\C-e\er"'
-# # fi
+if [[ $- =~ i ]]; then
+  bind '"\er": redraw-current-line'
+  bind '"\C-b": "$(co)\e\C-e\er"'
+  # bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
+  # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
+  # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
+  # bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
+  # bind '"\C-g\C-s": "$(stash)\e\C-e\er"'
+fi
+
+alias see='ruby --disable=gems /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
+
+alias seer='ruby /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
