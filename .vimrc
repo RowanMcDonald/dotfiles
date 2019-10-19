@@ -16,7 +16,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-endwise'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-commentary'
-" Plug 'dbakker/vim-projectroot'
+Plug 'dbakker/vim-projectroot'
 " Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar' " netrw+
@@ -67,7 +67,6 @@ Plug 'rust-lang/rust.vim'
 
 " Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 
-" Plug 'Quramy/tsuquyomi' -- needs vim proc
 Plug 'leafgarland/typescript-vim'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'pangloss/vim-javascript'
@@ -84,7 +83,6 @@ Plug 'glts/vim-textobj-comment'
  " Plug 'kana/vim-textobj-user' required above
 
 Plug 'junegunn/vim-xmark', { 'do': 'make' }
-Plug 'machakann/vim-highlightedyank'
 Plug 'junegunn/vim-easy-align'
 " Plug 'embear/vim-localvimrc' " respect local vimrc
 
@@ -377,6 +375,72 @@ let g:rails_projections = {
       \        "RSpec.describe '{}' do\nend",
       \   },
       \ }
+if !exists('g:loaded_projectionist')
+  runtime! plugin/projectionist.vim
+endif
+
+if !exists('g:projectionist_heuristics')
+  let g:projectionist_heuristics = {}
+endif
+
+call extend(g:projectionist_heuristics, {
+			\ '*.tsx': {
+			\   '*.tsx': {
+			\     'alternate': '{}.test.tsx',
+			\     'type': 'source'
+			\   },
+			\   '*.test.tsx': {
+			\     'alternate': '{}.tsx',
+			\     'type': 'test'
+			\   },
+			\ },
+			\ '*.go': {
+			\   '*.go': {
+			\     'alternate': '{}_test.go',
+			\     'type': 'source'
+			\   },
+			\   '*_test.go': {
+			\     'alternate': '{}.go',
+			\     'type': 'test'
+			\   },
+			\ }}, 'keep')
+
+" https://github.com/wincent/wincent/blob/60e0aab821932c247cd70681641bf1d87245ae36/roles/dotfiles/files/.vim/after/plugin/projectionist.vim#L38-L68
+" Helper function for batch-updating the g:projectionist_heuristics variable.
+" function! s:project(...)
+"   for [l:pattern, l:projection] in a:000
+"     let g:projectionist_heuristics['*'][l:pattern] = l:projection
+"   endfor
+" endfunction
+
+" " Set up projections for JS variants.
+" for s:extension in ['.js', '.jsx', '.ts', '.tsx']
+"   call s:project(
+"         \ ['*' . s:extension, {
+"         \   'alternate': [
+"         \         '{dirname}/{basename}.test' . s:extension,
+"         \         '{dirname}/{dirname}.test' . s:extension,
+"         \         '{dirname}/__tests__/{basename}.test' . s:extension,
+"         \   ],
+"         \   'type': 'source'
+"         \ }],
+"         \ ['*.test' . s:extension, {
+"         \       'alternate': [
+"         \         '{basename}' . s:extension,
+"         \         '{basename}/index' . s:extension
+"         \        ],
+"         \   'type': 'test',
+"         \ }],
+"         \ ['**/__tests__/*.test' . s:extension, {
+"         \       'alternate': [
+"         \         '{basename}' . s:extension,
+"         \         '{basename}/index' . s:extension
+"         \        ],
+"         \   'type': 'test'
+"         \ }])
+" endfor
+
+
 
 " let g:gem_projections = {
 " k}
@@ -536,6 +600,8 @@ let g:startify_lists = [
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
 let g:startify_enable_special = 0
+
+autocmd User StartifyBufferOpened ProjectRootCD
 
 "==============================
 " Highlighted yank
@@ -735,3 +801,12 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 let g:coc_node_path = "/Users/rowanmcdonald/.nodenv/versions/8.15.1/bin/node"
+
+"=================================
+" configure project root
+"=================================
+if !exists('g:rootmarkers')
+  let g:rootmarkers = []
+endif
+
+let g:rootmarkers += ['Gemfile', 'package.json']
