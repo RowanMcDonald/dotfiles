@@ -332,12 +332,6 @@ nmap <silent> <Leader>f :TestFile<CR>
 nmap <silent> <Leader>l :TestLast<CR>
 nmap <silent> <Leader>v :TestVisit<CR>
 
-" let test#ruby#use_binstubs = 0
-" let test#ruby#bundle_exec = 1
-let g:rspec_command = "!clear; ( cd $(find `( SPEC='{spec}'; CP=${SPEC\\%/*}; while [ -n \"$CP\" ] ; do echo $CP; CP=${CP\\%/*}; done; echo / ) ` -mindepth 1 -maxdepth 1 -type d -name spec)/..; bin/rspec {spec})"
-
-" let test#typescript#jest#executable = "SKIP_PREFLIGHT_CHECK=true $(yarn bin)/rescripts test"
-"
 " Map tricky escape sequence to control o
 if has('nvim')
   tmap <C-o> <C-\><C-n>
@@ -562,7 +556,7 @@ augroup _fzf
   autocmd ColorScheme * call <sid>update_fzf_colors()
 augroup END
 
-let g:fzf_layout = { 'window': '15new' }
+let g:fzf_layout = { 'window': '25new' }
 
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler

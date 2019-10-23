@@ -153,7 +153,7 @@ setProfileDefault() {
 #==================================
 # This solves the issue of "There are 3 other sessions using the database"
 #==================================
-function kill_conn() {
+function pg_kill_conn() {
     echo "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid(); \d" | psql template1
 }
 
@@ -208,11 +208,23 @@ co() {
   git checkout $(echo "$target" | awk '{print $2}')
 }
 
-source "$HOME/.bin/z.sh"
-unalias z 2> /dev/null
-z() {
-  [ $# -gt 0 ] && _z "$*" && return
-  cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+#===============================
+# z integration
+#===============================
+
+. /usr/local/etc/profile.d/z.sh
+unalias j
+j() {
+  if [[ -z "$*" ]]; then
+    cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
+  else
+    _last_z_args="$@"
+    _z "$@"
+  fi
+}
+
+jj() {
+  cd "$(_z -l 2>&1 | sed 's/^[0-9,.]* *//' | fzf -q "$_last_z_args")"
 }
 
 is_in_git_repo() {
