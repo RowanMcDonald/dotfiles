@@ -64,6 +64,7 @@ Plug 'ngmy/vim-rubocop'
 
 " other languages
 Plug 'rust-lang/rust.vim'
+Plug 'vim-python/python-syntax'
 
 " Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 
@@ -326,11 +327,6 @@ let g:netrw_winsize = 40
 "=========================
 " vim test
 "=========================
-nmap <silent> <Leader>n :TestNearest<CR>
-nmap <silent> <Leader>f :TestFile<CR>
-" nmap <silent> <Leader>s :TestSuite<CR>
-nmap <silent> <Leader>l :TestLast<CR>
-nmap <silent> <Leader>v :TestVisit<CR>
 
 " Map tricky escape sequence to control o
 if has('nvim')
@@ -505,18 +501,31 @@ let g:user_emmet_settings = {
 " Rubocop config
 "=========================
 let g:vimrubocop_keymap = 0
+
+"=========================
+" Leader commands
+"=========================
+
+" vim-test
+nmap <silent> <Leader>tn :TestNearest<CR>
+nmap <silent> <Leader>tf :TestFile<CR>
+nmap <silent> <Leader>ts :TestSuite<CR>
+nmap <silent> <Leader>tl :TestLast<CR>
+nmap <silent> <Leader>tv :TestVisit<CR>
+
 nmap <Leader>r :RuboCop -a<CR>
 
-"=========================
-" ruby editing helpers
-"=========================
+" insert pry
+map <Leader>ip orequire 'pry'; binding.pry<esc>:w<cr>
+" insert datetime
+map <Leader>it :put =strftime('# %a %d %b %Y')<cr>o
+"
+nnoremap <silent> <Leader>fw :Rg <C-R><C-W><CR>
+nnoremap <Leader>fp :Rg <CR>
+nnoremap <Leader>fb :GFiles?<CR>
+nnoremap <Leader>fl :Lines<CR>
 
-map <Leader>d orequire 'pry'; binding.pry<esc>:w<cr>
-
-"=========================
-" log editing helpers
-"=========================
-map <Leader>t :put =strftime('# %a %d %b %Y')<cr>o
+nnoremap <Leader>s :Startify<cr>
 
 "=========================
 " FZF support
@@ -556,7 +565,7 @@ augroup _fzf
   autocmd ColorScheme * call <sid>update_fzf_colors()
 augroup END
 
-let g:fzf_layout = { 'window': '25new' }
+let g:fzf_layout = { 'window': '45new' }
 
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler
@@ -574,15 +583,10 @@ let g:rg_command = '
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
-" open fzf with rg instead of ctrl p
-" open fzf with rg instead of ctrl p (but with word under cursor
-nnoremap <silent> <Leader>p :Rg <C-R><C-W><CR>
-nnoremap <Leader>; :Rg <CR>
 
 "===============================
 " Startify options
 "===============================
-nnoremap <Leader>s :Startify<cr>
 let g:startify_custom_header_quotes = [
     \ ["Moo"],
     \ ]

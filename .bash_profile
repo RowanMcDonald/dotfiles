@@ -3,6 +3,7 @@ export PATH=$PATH:~/.local/bin
 export PATH="/usr/local/sbin:$PATH"
 
 export EDITOR=/usr/local/bin/nvim
+# export PAGER=/usr/bin/less
 export VISUAL='nvim'
 export INPUTRC="$HOME/.inputrc"
 eval "$(rbenv init -)"

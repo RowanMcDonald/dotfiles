@@ -2,7 +2,7 @@ ENV['HOME'] ||= ENV['USERPROFILE'] || File.dirname(__FILE__)
 
 Pry.editor = ENV['VISUAL']
 Pry.config.history.file = if defined?(Rails)
-                            Rails.root.join('tmp', 'history.rb')
+                            `git rev-parse --show-toplevel`.strip + '/tmp/history.rb'
                           else
                             File.expand_path('~/.history.rb')
                           end

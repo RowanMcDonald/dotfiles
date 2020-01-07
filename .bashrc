@@ -65,13 +65,14 @@ else
   if [ -e ~/.git-prompt.sh ]; then
     source ~/.git-prompt.sh
   fi
-  PS1="\[\033[1;30m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
+  PS1="\[\033[1;34m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
 fi
 
 export HISTFILESIZE=
 export HISTSIZE=
 export HISTTIMEFORMAT="%d/%m/%y %T "
 export TERM=xterm
+export BAT_THEME="TwoDark"
 
 ##====================
 ## Stuff not to git
@@ -213,7 +214,6 @@ co() {
 #===============================
 
 . /usr/local/etc/profile.d/z.sh
-unalias j
 j() {
   if [[ -z "$*" ]]; then
     cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
