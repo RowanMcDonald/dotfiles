@@ -150,8 +150,8 @@ set wildignore+=node_modules/*,bower_components/*
 "=========================
 " Plugin dependecies
 "=========================
-let g:python_host_prog = '~/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '~/.pyenv/versions/neovim3/bin/python'
+let g:python_host_prog = '~/.pyenv/versions/2.7.16/bin/python'
+let g:python3_host_prog = '~/.pyenv/versions/3.7.2/bin/python'
 
 "=========================
 " Completion
@@ -344,6 +344,7 @@ let g:gist_open_browser_after_post = 1
 " Modern Rails Projections
 "=========================
 
+" Add ability to switch to schema
 let g:rails_projections = {
       \  "app/controllers/*_controller.rb": {
       \      "test": [
@@ -364,6 +365,15 @@ let g:rails_projections = {
       \      "template": "require 'rails_helper'\n\n" .
       \        "RSpec.describe '{}' do\nend",
       \   },
+      \  "spec/factories/*s.rb": {
+      \      "command": "factory",
+      \      "affinity": "collection",
+      \      "alternate": "app/models/%i.rb",
+      \      "related": "db/schema.rb#%s",
+      \      "test": "spec/models/%i_spec.rb",
+      \      "template": "FactoryGirl.define do\n  factory :%i do\n  end\nend",
+      \      "keywords": "factory sequence"
+      \    },
       \ }
 if !exists('g:loaded_projectionist')
   runtime! plugin/projectionist.vim

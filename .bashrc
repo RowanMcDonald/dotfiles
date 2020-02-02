@@ -12,9 +12,11 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ##====================
 ## Ruby
 ##====================
-alias be='bundle exec'
 alias bi='bundle install'
 alias ber='bundle exec rspec'
+be() {
+  BUNDLE_GEMFILE=Gemfile.local bundle exec $@
+}
 
 ##====================
 ## Git
