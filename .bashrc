@@ -12,6 +12,7 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ##====================
 ## Ruby
 ##====================
+BUNDLE_GEMFILE=Gemfile.local
 alias bi='bundle install'
 alias ber='bundle exec rspec'
 be() {
@@ -73,7 +74,7 @@ fi
 export HISTFILESIZE=
 export HISTSIZE=
 export HISTTIMEFORMAT="%d/%m/%y %T "
-export TERM=xterm
+# export TERM=xterm
 export BAT_THEME="TwoDark"
 
 ##====================
@@ -275,7 +276,7 @@ stash() {
 
 if [[ $- =~ i ]]; then
   bind '"\er": redraw-current-line'
-  bind '"\C-b": "$(co)\e\C-e\er"'
+  # bind '"\C-b": "$(co)\e\C-e\er"'
   # bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
   # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
   # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
@@ -284,5 +285,11 @@ if [[ $- =~ i ]]; then
 fi
 
 alias see='ruby --disable=gems /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
-
 alias seer='ruby /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
+
+if type tmux &>/dev/null; then
+  if [ "$TERM" == "xterm-256color" ] && [ "$TERM_PROGRAM" != "iTerm.app" ]; then
+    [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit; }
+  fi
+fi
+source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash

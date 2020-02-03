@@ -6,19 +6,25 @@
 " PLUGINS (using vim-plug)
 "=========================
 
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+" if empty(glob('~/.config/nvim/autoload/plug.vim'))
+"   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" endif
+
+" Set split to grey line
+set fillchars+=vert:\|
+hi VertSplit cterm=NONE ctermfg=NONE
+hi EndOfBuffer ctermfg=black ctermbg=black
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-endwise'
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'dbakker/vim-projectroot'
 " Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
 Plug 'tpope/vim-vinegar' " netrw+
 Plug 'arthurxavierx/vim-caser' " change casing
 
@@ -29,6 +35,8 @@ Plug 'tpope/vim-surround'
 " integrations
 Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rhubarb' " Enables :Gbrowse
+Plug 'rhysd/git-messenger.vim'
+
 Plug 'kristijanhusak/vim-carbon-now-sh'
 Plug 'mattn/gist-vim'
   Plug 'mattn/webapi-vim'
@@ -36,7 +44,8 @@ Plug 'mattn/gist-vim'
 " look and feel
 Plug 'junegunn/goyo.vim'
 Plug 'sleep/limelight.vim'
-Plug 'joshdick/onedark.vim'
+Plug 'joshdick/onedark.vim' " for lightline
+" Plug 'rafi/awesome-vim-colorschemes'
 " Plug 'ryanoasis/vim-devicons'
 Plug 'itchyny/lightline.vim' " status line
 Plug 'mhinz/vim-startify'
@@ -49,14 +58,15 @@ Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
+
 " Ruby Support
-Plug 'tpope/vim-projectionist'
+" Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 " Plug 'tpope/vim-rake'
 Plug 'tpope/vim-bundler'
 " Plug 'danchoi/ri.vim', { 'for': 'ruby' }
-Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' }
  Plug 'kana/vim-textobj-user'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'vim-scripts/blockle.vim' " allows for toggling between blocks <Leader>b
@@ -77,7 +87,8 @@ Plug 'prettier/vim-prettier', {
   \ 'for': ['javascript', 'json', 'typescript'] }
 
 Plug 'janko-m/vim-test' " language agnostic test running
-Plug 'jamestthompson3/vim-jest'
+" Plug 'jamestthompson3/vim-jest'
+Plug 'kassio/neoterm'
 
 " Text obj
 Plug 'glts/vim-textobj-comment'
@@ -85,8 +96,8 @@ Plug 'glts/vim-textobj-comment'
 
 Plug 'junegunn/vim-xmark', { 'do': 'make' }
 Plug 'junegunn/vim-easy-align'
-" Plug 'embear/vim-localvimrc' " respect local vimrc
 
+Plug 'dstein64/vim-startuptime'
 
 call plug#end()
 
@@ -99,6 +110,7 @@ set nocompatible " required by at least vim-textobj-rubyblock
 runtime macros/matchit.vim "use `%` to navigate between do ... end
 
 set clipboard=unnamed
+set mouse=a
 set lazyredraw                        " Reduce the redraw frequency
 set ruler               " Show the line and column numbers of the cursor.
 set formatoptions+=o    " Continue comment marker in new lines.
@@ -152,12 +164,8 @@ set wildignore+=node_modules/*,bower_components/*
 "=========================
 let g:python_host_prog = '~/.pyenv/versions/2.7.16/bin/python'
 let g:python3_host_prog = '~/.pyenv/versions/3.7.2/bin/python'
-
-"=========================
-" Completion
-"=========================
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-let g:SuperTabCrMapping                = 0
+let g:python_host_skip_check=1
+let g:python3_host_skip_check=1
 
 "=========================
 " Goyo
@@ -196,8 +204,8 @@ endfunction
 autocmd! User GoyoEnter call <SID>goyo_enter()
 autocmd! User GoyoLeave call <SID>goyo_leave()
 
-
 autocmd VimEnter * call s:set_highlights() " this is so goyo doesn't look horrible with iterm coloring
+" Also menus
 fun! s:set_highlights()
 				hi MatchParen term=underline ctermbg=None cterm=underline gui=underline
 				highlight CursorLineNr ctermfg=darkgray
@@ -213,20 +221,6 @@ let g:limelight_priority = 10
 let g:limelight_conceal_ctermfg =60
 let g:limelight_bop = '^\s'
 let g:limelight_eop = '\ze\n^\s'
-
-"========================
-" ctrl_p
-"========================
-" https://www.reddit.com/r/vim/comments/83h31q/speed_up_ctrlp_with_fd/
-let g:ctrlp_user_command = 'fd --type f --color=never "" %s'
-let g:ctrlp_custom_ignore = {
-												\ 'dir':  '\.git$|vcr\|vendor\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|log\|tmp$',
-												\ 'file': '\.exe$\|\.so$\|\.dat$'
-												\ }
-let g:ctrlp_root_markers = ['Gemfile', 'package.json']
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_use_caching = 0
-let g:ctrlp_show_hidden = 1
 
 
 "========================
@@ -246,13 +240,6 @@ let g:lightline = {
       \   'cocstatus': 'coc#status'
       \ },
       \ }
-
-"==========================
-" Thesaurus backends
-"==========================
-" let g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"
-" let g:tq_enabled_backends=["thesaurus_com", "mthesaur_txt", "datamuse_com",]
-" let g:tq_online_backends_timeout = 0.6
 
 "==========================
 " Easy Align
@@ -322,15 +309,41 @@ let g:netrw_preview = 1 " sets preview window vertical
 let g:netrw_alto = 0
 let g:netrw_winsize = 40
 
-
-
 "=========================
 " vim test
 "=========================
 
-" Map tricky escape sequence to control o
+let test#ruby#rspec#executable = 'BUNDLE_GEMFILE=Gemfile.local bundle exec rspec --no-profile'
+" nice test splits?
+" https://gist.github.com/adamzaninovich/5b9c7544cb0f5e746f75
 if has('nvim')
-  tmap <C-o> <C-\><C-n>
+
+  let test#strategy = "neoterm"
+  let g:neoterm_default_mod = "vertical"
+  let g:neoterm_autoscroll = 1 " Scroll to bottom when using neoterm
+  let g:neoterm_autoinsert = 0
+  " let g:neoterm_keep_term_open = 0 "when buffer closes, quit term
+
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <A-h> <C-\><C-n><C-w>h
+  tnoremap <A-j> <C-\><C-n><C-w>j
+  tnoremap <A-k> <C-\><C-n><C-w>k
+  tnoremap <A-l> <C-\><C-n><C-w>l
+
+  function! OpenTermV(...)
+    let g:neoterm_size = 80
+    let l:cmd = a:1 == '' ? 'pwd' : a:1
+    execute 'vert T '.l:cmd
+  endfunction
+
+  function! OpenTermH(...)
+    let g:neoterm_size = 15
+    let l:cmd = a:1 == '' ? 'pwd' : a:1
+    execute 'belowright T '.l:cmd
+  endfunction
+
+  command! -nargs=? VT call OpenTermV(<q-args>)
+  command! -nargs=? HT call OpenTermH(<q-args>)
 endif
 
 "=========================
@@ -375,115 +388,6 @@ let g:rails_projections = {
       \      "keywords": "factory sequence"
       \    },
       \ }
-if !exists('g:loaded_projectionist')
-  runtime! plugin/projectionist.vim
-endif
-
-if !exists('g:projectionist_heuristics')
-  let g:projectionist_heuristics = {}
-endif
-
-call extend(g:projectionist_heuristics, {
-			\ '*.tsx': {
-			\   '*.tsx': {
-			\     'alternate': '{}.test.tsx',
-			\     'type': 'source'
-			\   },
-			\   '*.test.tsx': {
-			\     'alternate': '{}.tsx',
-			\     'type': 'test'
-			\   },
-			\ },
-			\ '*.go': {
-			\   '*.go': {
-			\     'alternate': '{}_test.go',
-			\     'type': 'source'
-			\   },
-			\   '*_test.go': {
-			\     'alternate': '{}.go',
-			\     'type': 'test'
-			\   },
-			\ }}, 'keep')
-
-" https://github.com/wincent/wincent/blob/60e0aab821932c247cd70681641bf1d87245ae36/roles/dotfiles/files/.vim/after/plugin/projectionist.vim#L38-L68
-" Helper function for batch-updating the g:projectionist_heuristics variable.
-" function! s:project(...)
-"   for [l:pattern, l:projection] in a:000
-"     let g:projectionist_heuristics['*'][l:pattern] = l:projection
-"   endfor
-" endfunction
-
-" " Set up projections for JS variants.
-" for s:extension in ['.js', '.jsx', '.ts', '.tsx']
-"   call s:project(
-"         \ ['*' . s:extension, {
-"         \   'alternate': [
-"         \         '{dirname}/{basename}.test' . s:extension,
-"         \         '{dirname}/{dirname}.test' . s:extension,
-"         \         '{dirname}/__tests__/{basename}.test' . s:extension,
-"         \   ],
-"         \   'type': 'source'
-"         \ }],
-"         \ ['*.test' . s:extension, {
-"         \       'alternate': [
-"         \         '{basename}' . s:extension,
-"         \         '{basename}/index' . s:extension
-"         \        ],
-"         \   'type': 'test',
-"         \ }],
-"         \ ['**/__tests__/*.test' . s:extension, {
-"         \       'alternate': [
-"         \         '{basename}' . s:extension,
-"         \         '{basename}/index' . s:extension
-"         \        ],
-"         \   'type': 'test'
-"         \ }])
-" endfor
-
-
-
-" let g:gem_projections = {
-" k}
-"
-"=========================
-"  Ale configurations
-"=========================
-" let g:ale_sign_column_always = 1
-" let g:ale_sign_error = '!'
-" let g:ale_sign_warning = '•'
-" let g:ale_lint_on_text_changed = 'never'
-" let g:ale_lint_on_enter = 1
-" let g:ale_ruby_rubocop_executable = 'bundle'
-" let g:ale_linters = {
-" \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
-" \   'typescript': ['tsserver', 'tslint'],
-" \   'rust': ['cargo', 'rls'],
-" \}
-" " let g:ale_linters_ignore = {'typescript': ['tslint']}
-" let g:ale_typescript_tsserver_use_global = 1
-" let g:ale_typescript_tslint_use_global = 1
-" let g:ale_fixers = {
-" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-" \   'rust': ['rustfmt']
-" \}
-" let g:ale_fix_on_save = 1
-" " adjust colors
-" " highlight link ALEError Error
-" highlight link ALEStyleError Error
-" highlight ALEErrorSign guifg=#1E0010
-" highlight link ALEWarning WarningMsg
-" highlight link ALEStyleWarning WarningMsg
-" highlight ALEWarningSign guifg=#FFFFFF
-
-" nmap <leader>af <Plug>(ale_fix)
-" nmap <leader>al <Plug>(ale_lint)
-
-"=========================
-"  scratch configurations
-"=========================
-
-" let g:scratch_persistence_file = '~/.config/nvim/scratch/.rb'
-
 
 "=========================
 "  NVIM terminal config https://github.com/onivim/oni/issues/962
@@ -523,19 +427,66 @@ nmap <silent> <Leader>ts :TestSuite<CR>
 nmap <silent> <Leader>tl :TestLast<CR>
 nmap <silent> <Leader>tv :TestVisit<CR>
 
+nmap <silent> <Leader>tt :HT<CR>
+" nmap <silent> <Leader>ttv :VT<CR>
+
 nmap <Leader>r :RuboCop -a<CR>
 
 " insert pry
 map <Leader>ip orequire 'pry'; binding.pry<esc>:w<cr>
 " insert datetime
 map <Leader>it :put =strftime('# %a %d %b %Y')<cr>o
-"
+
+" find things
 nnoremap <silent> <Leader>fw :Rg <C-R><C-W><CR>
 nnoremap <Leader>fp :Rg <CR>
 nnoremap <Leader>fb :GFiles?<CR>
 nnoremap <Leader>fl :Lines<CR>
+nnoremap <silent> <leader>fm :call Fzf_MRU_dev()<CR>
+" Replacing ctrl-p with cool (if slightly buggy floating window)
+nnoremap <silent> <c-p> :call Fzf_dev()<cr>
 
 nnoremap <Leader>s :Startify<cr>
+
+" coq
+nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
+
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+"
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Create mappings for function text object, requires document symbols feature of languageserver.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <C-d> <Plug>(coc-range-select)
+xmap <silent> <C-d> <Plug>(coc-range-select)
+
+" git messenger
+nmap <Leader>gm <Plug>(git-messenger)
+
+
 
 "=========================
 " FZF support
@@ -570,12 +521,75 @@ function! s:update_fzf_colors()
         \ empty(cols) ? '' : (' --color='.join(cols, ','))
 endfunction
 
+function! s:edit_file(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let l:cmd = get({'ctrl-x': 'split',
+               \ 'ctrl-v': 'vertical split',
+               \ 'ctrl-t': 'tabe'}, a:lines[0], 'e')
+
+  for l:item in a:lines[1:]
+    let l:pos = stridx(l:item, ' ')
+    let l:file_path = l:item[pos+1:-1]
+    execute 'silent '. l:cmd . ' ' . l:file_path
+  endfor
+endfunction
+
+
+function! Fzf_dev()
+  let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x,ctrl-f'
+
+  call fzf#run({
+        \ 'source': split(system($FZF_DEFAULT_COMMAND), '\n'),
+        \ 'sink*':   function('s:edit_file'),
+        \ 'options': '-m --reverse ' . l:fzf_files_options,
+        \ 'down':    '40%',
+        \ 'window': 'call CreateCenteredFloatingWindow()'})
+endfunction
+
+function! Fzf_MRU_dev()
+  let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+
+  call fzf#run({
+        \ 'source': copy(fzf_mru#mrufiles#list()),
+        \ 'sink*':   function('s:edit_file'),
+        \ 'options': '-m --reverse --prompt "MRU>" ' . l:fzf_files_options,
+        \ 'down':    '40%',
+        \ 'window': 'call CreateCenteredFloatingWindow()'})
+endfunction
+
+
 augroup _fzf
   autocmd!
   autocmd ColorScheme * call <sid>update_fzf_colors()
+  autocmd FileType fzf tnoremap <buffer> <esc> <c-c>
+
+  tnoremap <silent><c-f> <C-\><c-n>:q! <enter> :call Fzf_MRU_dev()i<cr>
 augroup END
 
-let g:fzf_layout = { 'window': '45new' }
+function! CreateCenteredFloatingWindow()
+    let width = min([&columns - 4, max([80, &columns - 20])])
+    let height = min([&lines - 4, max([20, &lines - 10])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction
+let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler
@@ -586,12 +600,8 @@ let g:rg_command = '
   \ -g "*.{sql,R,rs,java,jbuilder,js,jsx,json,php,ctp,css,scss,md,styl,jade,html,config,py,cpp,c,go,hs,rb,erb,conf}"
   \ -g "!{public,.git,node_modules,vendor}/*" '
 
-" imap <c-x><c-k> <plug>(fzf-complete-word)
-" imap <c-x><c-f> <plug>(fzf-complete-path)
-" imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-" imap <c-x><c-l> <plug>(fzf-complete-line)
-
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+let g:fzf_mru_no_sort = 1
 
 
 "===============================
@@ -608,6 +618,19 @@ let g:startify_lists = [
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
 let g:startify_enable_special = 0
+let g:startify_session_persistence = 1
+let g:startify_files_number=20
+let g:startify_bookmarks = [
+      \ {'clc': '~/w/for_business/clinic/'},
+      \ {'bb': '~/w/for_business/b4b/'},
+      \ {'bcore': '~/w/for_business/b4b_core/'},
+      \ {'b@': '~/w/for_business/@betterment/b4b/'},
+      \ {'aa': '~/w/for_business/auditable_actions/'},
+      \ {'rt': '~/w/retail/retail/'},
+      \ {'rcore': '~/w/retail/retail_core/'},
+      \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
+      \ {'rc': '~/.vimrc'},
+      \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD
 
@@ -616,76 +639,12 @@ autocmd User StartifyBufferOpened ProjectRootCD
 "==============================
 let g:highlightedyank_highlight_duration = 100
 
-"============================================================================
-" AUTOCMD
-"============================================================================
-" not currently looking in the correct place?
-function! s:syntax_include(lang, b, e, inclusive)
-  let syns = split(globpath(&rtp, "syntax/".a:lang.".vim"), "\n")
-  if empty(syns)
-    return
-  endif
-
-  if exists('b:current_syntax')
-    let csyn = b:current_syntax
-    unlet b:current_syntax
-  endif
-
-  let z = "'" " Default
-  for nr in range(char2nr('a'), char2nr('z'))
-    let char = nr2char(nr)
-    if a:b !~ char && a:e !~ char
-      let z = char
-      break
-    endif
-  endfor
-
-  silent! exec printf("syntax include @%s %s", a:lang, syns[0])
-  if a:inclusive
-    exec printf('syntax region %sSnip start=%s\(%s\)\@=%s ' .
-                \ 'end=%s\(%s\)\@<=\(\)%s contains=@%s containedin=ALL',
-                \ a:lang, z, a:b, z, z, a:e, z, a:lang)
-  else
-    exec printf('syntax region %sSnip matchgroup=Snip start=%s%s%s ' .
-                \ 'end=%s%s%s contains=@%s containedin=ALL',
-                \ a:lang, z, a:b, z, z, a:e, z, a:lang)
-  endif
-
-  if exists('csyn')
-    let b:current_syntax = csyn
-  endif
-endfunction
-
-function! s:file_type_handler()
-  if &ft =~ 'jinja' && &ft != 'jinja'
-    call s:syntax_include('jinja', '{{', '}}', 1)
-    call s:syntax_include('jinja', '{%', '%}', 1)
-  elseif &ft =~ 'mkd\|markdown'
-    for lang in ['ruby', 'yaml', 'vim', 'sh', 'bash=sh', 'python', 'java', 'c',
-          \ 'clojure', 'clj=clojure', 'scala', 'sql', 'gnuplot', 'json=javascript']
-      call s:syntax_include(split(lang, '=')[-1], '```'.split(lang, '=')[0], '```', 0)
-    endfor
-
-    highlight def link Snip Folded
-    setlocal textwidth=78
-  elseif &ft == 'sh'
-    call s:syntax_include('ruby', '#!ruby', '/\%$', 1)
-  endif
-endfunction
-
 augroup vimrc
-  au BufWritePost vimrc,.vimrc nested if expand('%') !~ 'fugitive' | source % | endif
-
-  " Included syntax
-  au FileType,ColorScheme * call <SID>file_type_handler()
+  " au BufWritePost vimrc,.vimrc nested if expand('%') !~ 'fugitive' | source % | endif
 
   " Fugitive
   au FileType gitcommit setlocal completefunc=emoji#complete
   au FileType gitcommit nnoremap <buffer> <silent> cd :<C-U>Gcommit --amend --date="$(date)"<CR>
-
-  " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
-  au BufNewFile,BufRead,InsertLeave * silent! match ExtraWhitespace /\s\+$/
-  au InsertEnter * silent! match ExtraWhitespace /\s\+\%#\@<!$/
 augroup END
 
 "===========================
@@ -722,16 +681,6 @@ let g:coc_snippet_next = '<tab>'
 
 inoremap <silent><expr> <c-space> coc#refresh()
 " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
-
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -741,16 +690,6 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Highlight symbol under cursor on CursorHold
-" autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Remap for format selected region
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
-
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
@@ -758,25 +697,6 @@ augroup mygroup
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -790,24 +710,6 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
 let g:coc_node_path = "/Users/rowanmcdonald/.nodenv/versions/8.15.1/bin/node"
 
 "=================================
@@ -818,3 +720,25 @@ if !exists('g:rootmarkers')
 endif
 
 let g:rootmarkers += ['Gemfile', 'package.json']
+
+"=================================
+" configure git messenger
+"=================================
+
+function! s:setup_git_mess()
+  set winhl=Normal:Floating
+endfunction
+autocmd FileType gitmessengerpopup call <SID>setup_git_mess()
+
+"=================================
+" Strip whitespace
+"=================================
+fun! StripTrailingWhitespace()
+    " Only strip if the b:noStripeWhitespace variable isn't set
+    if exists('b:noStripWhitespace')
+        return
+    endif
+    %s/\s\+$//e
+endfun
+autocmd BufWritePre * call StripTrailingWhitespace()
+autocmd FileType markdown let b:noStripWhitespace=1
