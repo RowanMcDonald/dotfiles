@@ -50,10 +50,11 @@ alias la='exa -la'           # show hidden files
 ## Navigation
 ##====================
 
-alias ..='cd ..; pwd'
-alias ...='cd ../..; pwd'
-alias ....='cd ../../..; pwd'
-alias .....='cd ../../../..; pwd'
+alias bwd='pwd | sed -e "s:/:🥖:g"'
+alias ..='cd ..; bwd'
+alias ...='cd ../..; bwd'
+alias ....='cd ../../..; bwd'
+alias .....='cd ../../../..; bwd'
 
 ##====================
 ## System
@@ -111,7 +112,7 @@ alias android='open -a /Applications/Android\ Studio.app .'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 ##========================
-## Local gemfile setup 🐲 
+## Local gemfile setup 🐲
 ##========================
 ## bundle config --global gemfile ~/.config/bundler/Gemfile.local
 ##

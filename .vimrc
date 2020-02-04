@@ -18,11 +18,15 @@ hi VertSplit cterm=NONE ctermfg=NONE
 hi EndOfBuffer ctermfg=black ctermbg=black
 
 call plug#begin('~/.config/nvim/plugged')
+Plug 'unblevable/quick-scope'
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+Plug 'wsdjeg/vim-fetch' " vim opens files on indicated line + column
 Plug 'tpope/vim-endwise'
 " Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'dbakker/vim-projectroot'
-" Plug 'easymotion/vim-easymotion'
+Plug 'christoomey/vim-tmux-navigator' "
+" Plug 'easymotion/vim-easymotion' " too much load time :/
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'tpope/vim-vinegar' " netrw+
@@ -52,9 +56,7 @@ Plug 'mhinz/vim-startify'
 
 " snippits
 " Plug 'SirVer/ultisnips'
-" Plug 'ervandew/supertab'
 " Plug 'honza/vim-snippets'
-" Plug 'SirVer/ultisnips'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
@@ -68,6 +70,8 @@ Plug 'tpope/vim-bundler'
 " Plug 'danchoi/ri.vim', { 'for': 'ruby' }
 Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' }
  Plug 'kana/vim-textobj-user'
+Plug 'AndrewRadev/splitjoin.vim' " use gS
+
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'vim-scripts/blockle.vim' " allows for toggling between blocks <Leader>b
 Plug 'ngmy/vim-rubocop'
@@ -97,7 +101,7 @@ Plug 'glts/vim-textobj-comment'
 Plug 'junegunn/vim-xmark', { 'do': 'make' }
 Plug 'junegunn/vim-easy-align'
 
-Plug 'dstein64/vim-startuptime'
+" Plug 'dstein64/vim-startuptime'
 
 call plug#end()
 
@@ -537,7 +541,11 @@ endfunction
 
 
 function! Fzf_dev()
-  let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x,ctrl-f'
+  if (winwidth(0) >= 120)
+    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+  else
+    let l:fzf_files_options = '--expect=ctrl-v,ctrl-x'
+  endif
 
   call fzf#run({
         \ 'source': split(system($FZF_DEFAULT_COMMAND), '\n'),
@@ -548,7 +556,12 @@ function! Fzf_dev()
 endfunction
 
 function! Fzf_MRU_dev()
-  let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+  if (winwidth(0) >= 120)
+    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+  else
+    let l:fzf_files_options = '--expect=ctrl-v,ctrl-x'
+  endif
+
 
   call fzf#run({
         \ 'source': copy(fzf_mru#mrufiles#list()),
@@ -742,3 +755,16 @@ fun! StripTrailingWhitespace()
 endfun
 autocmd BufWritePre * call StripTrailingWhitespace()
 autocmd FileType markdown let b:noStripWhitespace=1
+
+"================================
+" spelling
+"================================
+
+set spelllang=en
+autocmd FileType markdown setlocal spell
+autocmd FileType eruby setlocal spell
+" autocmd BufRead,BufNewFile *.rb setlocal spell
+let ruby_spellcheck_strings = 1
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellBad ctermfg=red
