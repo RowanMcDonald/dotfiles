@@ -2,26 +2,28 @@
 # Config alias
 #===================
 alias config='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
-
-# export TERM=xterm-256color
-##====================
-## Miscellaneous
-##====================
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-
-##====================
-## Ruby
-##====================
-BUNDLE_GEMFILE=Gemfile.local
-alias bi='bundle install'
-alias ber='bundle exec rspec'
-be() {
-  BUNDLE_GEMFILE=Gemfile.local bundle exec $@
+v() {
+  nvim $@
 }
 
-##====================
-## Git
-##====================
+#====================
+# Miscellaneous
+#====================
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+
+#====================
+# Ruby
+#====================
+alias bi='bundle install'
+alias ber='bundle exec rspec'
+LOCAL_GEMFILE=Gemfile.local
+be() {
+   bundle exec $@
+}
+
+#====================
+# Git
+#====================
 
 alias gs='git status -s'
 alias gsl='git shortlog -sn'
@@ -32,6 +34,7 @@ alias b="git for-each-ref --sort='-authordate' --format='%(objectname:short)%09%
 alias ga='git add .; git status -s'
 alias cl="git checkout master; git fetch; git pull"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
 ## add command for local changes to master
 alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
 
@@ -46,9 +49,9 @@ alias gfx='git clean -fdx'
 alias ls='exa -hF'           # add colors for filetype recognition
 alias la='exa -la'           # show hidden files
 
-##====================
-## Navigation
-##====================
+#====================
+# Navigation
+#====================
 
 alias bwd='pwd | sed -e "s:/:🥖:g"'
 alias ..='cd ..; bwd'
@@ -56,10 +59,10 @@ alias ...='cd ../..; bwd'
 alias ....='cd ../../..; bwd'
 alias .....='cd ../../../..; bwd'
 
-##====================
-## System
-##  This is my bash prompt
-##====================
+#====================
+# System
+#  This is my bash prompt
+#====================
 
 if [ "$PLATFORM" = Linux ]; then
   PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
@@ -75,14 +78,12 @@ fi
 export HISTFILESIZE=
 export HISTSIZE=
 export HISTTIMEFORMAT="%d/%m/%y %T "
-# export TERM=xterm
 export BAT_THEME="TwoDark"
 
-##====================
-## Stuff not to git
-##====================
+#====================
+# Stuff not to git
+#====================
 source ~/.private-config
-
 
 #====================
 # Language
@@ -111,26 +112,26 @@ alias android='open -a /Applications/Android\ Studio.app .'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-##========================
-## Local gemfile setup 🐲
-##========================
-## bundle config --global gemfile ~/.config/bundler/Gemfile.local
-##
+###========================
+### Local gemfile setup 🐲
+###========================
+### bundle config --global gemfile ~/.config/bundler/Gemfile.local
+###
 
-## function bundle() {
-##   bundle="$(type -P bundle)"
+### function bundle() {
+###   bundle="$(type -P bundle)"
 
-##   if [ -r "$BUNDLE_GEMFILE" ] && [ -r Gemfile ] &&
-##      [ "$BUNDLE_GEMFILE" != Gemfile ] &&
-##      [[ "$1" =~ ^(|install|update)$ ]]; then
-##     BUNDLE_GEMFILE=Gemfile "$bundle" "$@"
-##     cp Gemfile.lock "${BUNDLE_GEMFILE}.lock"
-##   fi
+###   if [ -r "$BUNDLE_GEMFILE" ] && [ -r Gemfile ] &&
+###      [ "$BUNDLE_GEMFILE" != Gemfile ] &&
+###      [[ "$1" =~ ^(|install|update)$ ]]; then
+###     BUNDLE_GEMFILE=Gemfile "$bundle" "$@"
+###     cp Gemfile.lock "${BUNDLE_GEMFILE}.lock"
+###   fi
 
-##   "$bundle" "$@"
-## }
-## use modes be_local, be_stop_local, be_reset_local
-##
+###   "$bundle" "$@"
+### }
+### use modes be_local, be_stop_local, be_reset_local
+###
 
 #==================================
 # MAC CONF
@@ -141,7 +142,6 @@ notify() {
 }
 
 eval "$(direnv hook bash)"
-
 
 #==================================
 # Switch to large text  in iterm
@@ -161,14 +161,6 @@ setProfileDefault() {
 function pg_kill_conn() {
     echo "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid(); \d" | psql template1
 }
-
-##==================================
-## very good plugins
-##==================================
-eval $(thefuck --alias)
-# eval "$(fasd --init auto)"
-
-source "$HOME/.bootstrap/env.sh"
 
 ##===================================
 # FZF stuff
@@ -277,7 +269,7 @@ stash() {
 
 if [[ $- =~ i ]]; then
   bind '"\er": redraw-current-line'
-  # bind '"\C-s": "$(co)\e\C-e\er"'
+  bind '"\C-s": "$(co)\e\C-e\er"'
   # bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
   # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
   # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
@@ -294,3 +286,5 @@ if type tmux &>/dev/null; then
   fi
 fi
 source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+

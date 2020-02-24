@@ -3,15 +3,14 @@ export PATH=$PATH:~/.local/bin
 export PATH="/usr/local/sbin:$PATH"
 
 export EDITOR=/usr/local/bin/nvim
-# export PAGER=/usr/bin/less
 export VISUAL='nvim'
 export INPUTRC="$HOME/.inputrc"
-eval "$(rbenv init -)"
-
-[ -f ~/.bashrc ] && source ~/.bashrc
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+export RIPGREP_CONFIG_PATH=~/.rgrc
 
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
 
-export RIPGREP_CONFIG_PATH=~/.rgrc
+[ -f ~/.bashrc ] && source ~/.bashrc
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+eval "$(rbenv init -)"
+

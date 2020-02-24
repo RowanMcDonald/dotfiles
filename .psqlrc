@@ -1,6 +1,19 @@
+\set QUIET 1
+
+\pset null '¤'
+\pset pager off
+
+\timing
+
+\x auto
+
+\set PROMPT1 '%[%033[1m%][%/]%[%033[0m%] 🦉 '
+-- SELECT * FROM<enter>. %R shows what type of input it expects.
+\set PROMPT2 '... > '
+\set VERBOSITY verbose
+\set HISTCONTROL ignoredups
 \set ON_ERROR_ROLLBACK interactive
 \set COMP_KEYWORD_CASE upper
 \set HISTFILE ~/.psql/history- :DBNAME
 
-\pset pager off
-\pset null '(null)'
+\unset QUIET
