@@ -6,11 +6,11 @@
 " PLUGINS (using vim-plug)
 "=========================
 
-" if empty(glob('~/.config/nvim/autoload/plug.vim'))
-"   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 " Set split to grey line
 set fillchars+=vert:\|
@@ -18,113 +18,117 @@ hi VertSplit cterm=NONE ctermfg=NONE
 hi EndOfBuffer ctermfg=black ctermbg=black
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'unblevable/quick-scope'
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-Plug 'wsdjeg/vim-fetch' " vim opens files on indicated line + column
-Plug 'tpope/vim-endwise'
-" Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tpope/vim-commentary'
-Plug 'dbakker/vim-projectroot'
-Plug 'christoomey/vim-tmux-navigator' "
-" Plug 'easymotion/vim-easymotion' " too much load time :/
-Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
-Plug 'pbogut/fzf-mru.vim'
-Plug 'tpope/vim-vinegar' " netrw+
-Plug 'arthurxavierx/vim-caser' " change casing
+"============================
+" Plugin graveyard
+"============================
+"
+" Plug 'tpope/vim-projectionist'           " why doesn't this work :/
+" Plug 'easymotion/vim-easymotion'         " too much load time :/
+" Plug 'wsdjeg/vim-fetch'                  " not using
+" Plug 'christoomey/vim-tmux-navigator'    " beautiful plugin, not using tmux rn
+" Plug 'kien/ctrlp.vim'                    "  out-growing ctrl-p, 😭
+" Plug 'rhysd/git-messenger.vim'           " nice but not needed rn
+" Plug 'mattn/gist-vim'                    " rarely use
+"   Plug 'mattn/webapi-vim'
+" Plug 'tpope/vim-rake'                    " do not use
+" Plug 'SirVer/ultisnips'                  " someday I'll get a working snippets config
+" Plug 'honza/vim-snippets'
+" Plug 'danchoi/ri.vim', { 'for': 'ruby' } " coc provides this behavior
+" Plug 'ecomba/vim-ruby-refactoring'       " usually can't remember the shortcuts
+" Plug 'ngmy/vim-rubocop'                  " not needed
+" Plug 'dstein64/vim-startuptime'          " diagnostic
+" Plug 'nelstrom/vim-textobj-rubyblock'
 
+" Do I use these?
+" Plug 'leafgarland/typescript-vim'
+" Plug 'jelera/vim-javascript-syntax'
+" Plug 'pangloss/vim-javascript'
+" Plug 'vim-python/python-syntax'
+" Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+
+" Plug 'rhysd/unite-ruby-require.vim'
+Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'chemzqm/denite-git'
+
+Plug 'tpope/vim-sensible' " normal defaults
+
+" Code manipulation
+Plug 'tpope/vim-commentary' " gcc
 Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-dispatch'
-" Plug 'w0rp/ale'
+Plug 'AndrewRadev/splitjoin.vim' " use gS
+Plug 'andymass/vim-matchup'
+Plug 'arthurxavierx/vim-caser'
+Plug 'junegunn/vim-easy-align'
 
-" integrations
-Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rhubarb' " Enables :Gbrowse
-Plug 'rhysd/git-messenger.vim'
-
-Plug 'kristijanhusak/vim-carbon-now-sh'
-Plug 'mattn/gist-vim'
-  Plug 'mattn/webapi-vim'
-
-" look and feel
-Plug 'junegunn/goyo.vim'
-Plug 'sleep/limelight.vim'
-Plug 'joshdick/onedark.vim' " for lightline
-" Plug 'rafi/awesome-vim-colorschemes'
-" Plug 'ryanoasis/vim-devicons'
-Plug 'itchyny/lightline.vim' " status line
+" Navigation
+Plug 'dbakker/vim-projectroot'
+Plug 'unblevable/quick-scope' " movement hints with f
+Plug 'tpope/vim-vinegar' " netrw+
 Plug 'mhinz/vim-startify'
 
-" snippits
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Search
+Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
 
+" integrations
+Plug 'tpope/vim-fugitive'  " git commit
+  Plug 'tpope/vim-rhubarb' " Enables :Gbrowse
 
+" look and feel
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'sleep/limelight.vim', { 'on': 'Goyo' }
+Plug 'itchyny/lightline.vim' " status line
+  Plug 'joshdick/onedark.vim'
+
+" coc plugins
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
 " Ruby Support
-" Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-endwise' " adds end while you're typing
 Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
-" Plug 'tpope/vim-rake'
-Plug 'tpope/vim-bundler'
-" Plug 'danchoi/ri.vim', { 'for': 'ruby' }
-Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' }
- Plug 'kana/vim-textobj-user'
-Plug 'AndrewRadev/splitjoin.vim' " use gS
+let g:ruby_path = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
+let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
 
-Plug 'ecomba/vim-ruby-refactoring'
-Plug 'vim-scripts/blockle.vim' " allows for toggling between blocks <Leader>b
-Plug 'ngmy/vim-rubocop'
+Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 
 " other languages
 Plug 'rust-lang/rust.vim'
-Plug 'vim-python/python-syntax'
 
-" Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
-
-Plug 'leafgarland/typescript-vim'
-Plug 'jelera/vim-javascript-syntax'
-Plug 'pangloss/vim-javascript'
-Plug 'mattn/emmet-vim'
+" Frontend languages
+Plug 'mattn/emmet-vim', { 'for': ['html', 'erb'] }
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
   \ 'for': ['javascript', 'json', 'typescript'] }
 
+" testing
 Plug 'janko-m/vim-test' " language agnostic test running
-" Plug 'jamestthompson3/vim-jest'
 Plug 'kassio/neoterm'
 
 " Text obj
 Plug 'glts/vim-textobj-comment'
- " Plug 'kana/vim-textobj-user' required above
+ Plug 'kana/vim-textobj-user'
 
-Plug 'junegunn/vim-xmark', { 'do': 'make' }
-Plug 'junegunn/vim-easy-align'
-
-" Plug 'dstein64/vim-startuptime'
-
+Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
 call plug#end()
 
 ""======================
 " General vim settings
 ""======================
 
-filetype plugin indent on
 set nocompatible " required by at least vim-textobj-rubyblock
 runtime macros/matchit.vim "use `%` to navigate between do ... end
 
 set clipboard=unnamed
-set mouse=a
+set mouse=
 set lazyredraw                        " Reduce the redraw frequency
-set ruler               " Show the line and column numbers of the cursor.
 set formatoptions+=o    " Continue comment marker in new lines.
 set modeline            " Enable modeline.
 set linespace=0         " Set line-spacing to minimum.
-set showcmd                     " Show me what I'm typing
+set showcmd                 " Show me what I'm typing
 set showmode                    " Show current mode.
 set noswapfile                  " Don't use swapfile
 set autowrite                   " Automatically save before :next, :make etc.
-set laststatus=2
 set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
 set showmatch                   " Do not show matching brackets by flickering
 set matchtime=1									" Match tenths of a second
@@ -134,16 +138,12 @@ set smartcase                   " ... but not when search pattern contains upper
 set tabstop=2
 set shiftwidth=2
 set expandtab
-let mapleader = "\<SPACE>"
-
 " set relativenumber
 set nonumber
 set numberwidth=3
 set nohlsearch
-set incsearch
 set notermguicolors
 set splitbelow splitright
-set backspace=indent,eol,start
 set undofile
 set undodir=~/.config/nvim/undodir
 set directory=~/.config/nvim/tmp,.
@@ -151,7 +151,6 @@ set directory=~/.config/nvim/tmp,.
 ""======================
 " Wildmenu settings
 ""======================
-set wildmenu
 set wildmode=longest:full,full
 set wildignore+=*.a,*.o
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
@@ -216,6 +215,10 @@ fun! s:set_highlights()
 				highlight LineNr ctermfg=darkgray
 				highlight Pmenu ctermfg=NONE ctermbg=237
 endfun
+" output current highlight group
+nnoremap <f10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<cr>
 
 "==================
 " Limelight
@@ -317,7 +320,6 @@ let g:netrw_winsize = 40
 " vim test
 "=========================
 
-let test#ruby#rspec#executable = 'BUNDLE_GEMFILE=Gemfile.local bundle exec rspec --no-profile'
 " nice test splits?
 " https://gist.github.com/adamzaninovich/5b9c7544cb0f5e746f75
 if has('nvim')
@@ -423,6 +425,16 @@ let g:vimrubocop_keymap = 0
 "=========================
 " Leader commands
 "=========================
+let mapleader = "\<SPACE>"
+
+nnoremap <silent> <Leader>db :Denite buffer<CR>
+nnoremap <silent> <Leader>df :DeniteProjectDir file/rec<CR>
+nnoremap <silent> <Leader>dg :<C-u>Denite grep:. -no-empty<CR>
+nnoremap <silent> <Leader>dj :<C-u>DeniteCursorWord grep:.<CR>
+
+" splitjoin =
+nmap <silent> <Leader>jj :SplitjoinJoin<CR>
+nmap <silent> <Leader>jj :SplitjoinSplit<CR>
 
 " vim-test
 nmap <silent> <Leader>tn :TestNearest<CR>
@@ -486,10 +498,6 @@ omap af <Plug>(coc-funcobj-a)
 " Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
 nmap <silent> <C-d> <Plug>(coc-range-select)
 xmap <silent> <C-d> <Plug>(coc-range-select)
-
-" git messenger
-nmap <Leader>gm <Plug>(git-messenger)
-
 
 
 "=========================
@@ -640,25 +648,12 @@ let g:startify_bookmarks = [
       \ {'b@': '~/w/for_business/@betterment/b4b/'},
       \ {'aa': '~/w/for_business/auditable_actions/'},
       \ {'rt': '~/w/retail/retail/'},
-      \ {'rcore': '~/w/retail/retail_core/'},
+      \ {'recore': '~/w/retail/retail_core/'},
       \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
       \ {'rc': '~/.vimrc'},
       \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD
-
-"==============================
-" Highlighted yank
-"==============================
-let g:highlightedyank_highlight_duration = 100
-
-augroup vimrc
-  " au BufWritePost vimrc,.vimrc nested if expand('%') !~ 'fugitive' | source % | endif
-
-  " Fugitive
-  au FileType gitcommit setlocal completefunc=emoji#complete
-  au FileType gitcommit nnoremap <buffer> <silent> cd :<C-U>Gcommit --amend --date="$(date)"<CR>
-augroup END
 
 "===========================
 " Settings for Coc
@@ -735,15 +730,6 @@ endif
 let g:rootmarkers += ['Gemfile', 'package.json']
 
 "=================================
-" configure git messenger
-"=================================
-
-function! s:setup_git_mess()
-  set winhl=Normal:Floating
-endfunction
-autocmd FileType gitmessengerpopup call <SID>setup_git_mess()
-
-"=================================
 " Strip whitespace
 "=================================
 fun! StripTrailingWhitespace()
@@ -775,3 +761,130 @@ hi SpellBad ctermfg=red
 let g:splitjoin_ruby_curly_braces = 0
 let g:splitjoin_ruby_hanging_args = 0
 let g:splitjoin_trailing_comma = 1
+
+"================================
+" Quick scope - press f see highlights
+"================================
+
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+"===============================
+" matchup
+"===============================
+let g:matchup_matchparen_enabled=0 " do not highlight matches
+
+
+try
+" === Denite setup ==="
+" Use ripgrep for searching current directory for files
+" By default, ripgrep will respect rules in .gitignore
+"   --files: Print each file that would be searched (but don't search)
+"   --glob:  Include or exclues files for searching that match the given glob
+"            (aka ignore .git files)
+"
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+
+" Use ripgrep in place of "grep"
+call denite#custom#var('grep', 'command', ['rg'])
+
+" filter on both filename and line
+call denite#custom#source('grep', 'converters', ['converter_abbr_word'])
+
+
+" Custom options for ripgrep
+"   --vimgrep:  Show results with every match on it's own line
+"   --hidden:   Search hidden directories and files
+"   --heading:  Show the file name above clusters of matches from each file
+"   --S:        Search case insensitively if the pattern is all lowercase
+call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--heading', '-S'])
+
+" Recommended defaults for ripgrep via Denite docs
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+
+" Remove date from buffer list
+call denite#custom#var('buffer', 'date_format', '')
+
+" Custom options for Denite
+"   auto_resize             - Auto resize the Denite window height automatically.
+"   prompt                  - Customize denite prompt
+"   direction               - Specify Denite window direction as directly below current pane
+"   winminheight            - Specify min height for Denite window
+"   highlight_mode_insert   - Specify h1-CursorLine in insert mode
+"   prompt_highlight        - Specify color of prompt
+"   highlight_matched_char  - Matched characters highlight
+"   highlight_matched_range - matched range highlight
+
+let s:denite_options = {'default' : {
+\ 'prompt': '❯',
+\ 'auto_resume': 1,
+\ 'start_filter': 1,
+\ 'auto_resize': 1,
+\ 'source_names': 'short',
+\ 'statusline': 0,
+\ 'smartcase': 1,
+\ 'max_dynamic_update_candidates': 50000,
+\ 'highlight_matched_range': 'Visual',
+\ 'highlight_matched_char': 'Visual',
+\ 'highlight_preview_line': 'Visual',
+\ 'rootmarkers': 'Gemfile',
+\ }}
+
+" Loop through denite options and enable them
+function! s:profile(opts) abort
+  for l:fname in keys(a:opts)
+    for l:dopt in keys(a:opts[l:fname])
+      call denite#custom#option(l:fname, l:dopt, a:opts[l:fname][l:dopt])
+    endfor
+  endfor
+endfunction
+
+call s:profile(s:denite_options)
+catch
+  echo 'Denite not installed. It should work after running :PlugInstall'
+endtry
+
+autocmd FileType denite-filter call s:denite_filter_my_settings()
+function! s:denite_filter_my_settings() abort
+  imap <silent><buffer> <C-o>
+  \ <Plug>(denite_filter_quit)
+  inoremap <silent><buffer><expr> <Esc>
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> <Esc>
+  \ denite#do_map('quit')
+  inoremap <silent><buffer><expr> <CR>
+  \ denite#do_map('do_action')
+  inoremap <silent><buffer><expr> <C-t>
+  \ denite#do_map('do_action', 'tabopen')
+  inoremap <silent><buffer><expr> <C-v>
+  \ denite#do_map('do_action', 'vsplit')
+  inoremap <silent><buffer><expr> <C-h>
+  \ denite#do_map('do_action', 'split')
+endfunction
+
+autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+  call s:set_highlights()
+  nnoremap <silent><buffer><expr> <CR>
+  \ denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> q
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> <Esc>
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> d
+  \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+  \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> i
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <C-o>
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <C-t>
+  \ denite#do_map('do_action', 'tabopen')
+  nnoremap <silent><buffer><expr> <C-v>
+  \ denite#do_map('do_action', 'vsplit')
+  nnoremap <silent><buffer><expr> <C-h>
+  \ denite#do_map('do_action', 'split')
+endfunction
