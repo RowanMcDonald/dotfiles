@@ -49,6 +49,8 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'rhysd/unite-ruby-require.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'chemzqm/denite-git'
+" Plug 'camspiers/animate.vim'
+" Plug 'camspiers/lens.vim'
 
 Plug 'tpope/vim-sensible' " normal defaults
 
@@ -429,12 +431,14 @@ let mapleader = "\<SPACE>"
 
 nnoremap <silent> <Leader>db :Denite buffer<CR>
 nnoremap <silent> <Leader>df :DeniteProjectDir file/rec<CR>
-nnoremap <silent> <Leader>dg :<C-u>Denite grep:. -no-empty<CR>
 nnoremap <silent> <Leader>dj :<C-u>DeniteCursorWord grep:.<CR>
+nnoremap <silent> <Leader>dgp :<C-u>Denite grep:. -no-empty<CR>
+nnoremap <silent> <Leader>dgc :<C-u>Denite gitchanged <CR>
+nnoremap <silent> <Leader>dgb :<C-u>Denite gitbranch <CR>
 
 " splitjoin =
 nmap <silent> <Leader>jj :SplitjoinJoin<CR>
-nmap <silent> <Leader>jj :SplitjoinSplit<CR>
+nmap <silent> <Leader>js :SplitjoinSplit<CR>
 
 " vim-test
 nmap <silent> <Leader>tn :TestNearest<CR>

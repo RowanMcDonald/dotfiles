@@ -21,6 +21,25 @@ be() {
    bundle exec $@
 }
 
+in_each_ruby_dir(){
+  # this is not working :/
+  local root=$(git rev-parse --show-toplevel)
+  cd $root
+
+  for g in $(find . -name 'Gemfile'); do
+    cd $(dirname ${g})
+    $@
+    cd ..
+  done
+}
+
+# run rubocop on files changed since the base branch that are under the current dir
+rubo() {
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+  local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent master) | sed -ne 's/^ //p' | head -1)
+  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs rubocop
+}
+
 #====================
 # Git
 #====================
@@ -184,12 +203,12 @@ fi
 
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
 
-fgl() (
+fgl() {
   [ $# -eq 0 ] && return
   cd /usr/local/Cellar/figlet/*/share/figlet/fonts
   local font=$(ls *.flf | sort | fzf --no-multi --reverse --preview "figlet -f {} $@" --preview-window up) &&
   figlet -f "$font" "$@" | pbcopy
-)
+}
 
 # co - checkout git branch/tag
 co() {
@@ -269,7 +288,7 @@ stash() {
 
 if [[ $- =~ i ]]; then
   bind '"\er": redraw-current-line'
-  bind '"\C-s": "$(co)\e\C-e\er"'
+  bind '"\C-b": "$(co)\e\C-e\er"'
   # bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
   # bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
   # bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
