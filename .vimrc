@@ -22,7 +22,6 @@ call plug#begin('~/.config/nvim/plugged')
 " Plugin graveyard
 "============================
 "
-" Plug 'tpope/vim-projectionist'           " why doesn't this work :/
 " Plug 'easymotion/vim-easymotion'         " too much load time :/
 " Plug 'wsdjeg/vim-fetch'                  " not using
 " Plug 'christoomey/vim-tmux-navigator'    " beautiful plugin, not using tmux rn
@@ -67,6 +66,7 @@ Plug 'dbakker/vim-projectroot'
 Plug 'unblevable/quick-scope' " movement hints with f
 Plug 'tpope/vim-vinegar' " netrw+
 Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
 
 " Search
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
@@ -93,12 +93,15 @@ let g:ruby_path = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
 let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
 
 Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
+" Gemfile.lock changes working dir, Gemfile does not
 
 " other languages
 Plug 'rust-lang/rust.vim'
+let g:rust_fold = 1
+let g:rustfmt_autosave = 1
 
 " Frontend languages
-Plug 'mattn/emmet-vim', { 'for': ['html', 'erb'] }
+Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby'] }
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
   \ 'for': ['javascript', 'json', 'typescript'] }
@@ -386,15 +389,6 @@ let g:rails_projections = {
       \      "template": "require 'rails_helper'\n\n" .
       \        "RSpec.describe '{}' do\nend",
       \   },
-      \  "spec/factories/*s.rb": {
-      \      "command": "factory",
-      \      "affinity": "collection",
-      \      "alternate": "app/models/%i.rb",
-      \      "related": "db/schema.rb#%s",
-      \      "test": "spec/models/%i_spec.rb",
-      \      "template": "FactoryGirl.define do\n  factory :%i do\n  end\nend",
-      \      "keywords": "factory sequence"
-      \    },
       \ }
 
 "=========================
@@ -892,3 +886,6 @@ function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> <C-h>
   \ denite#do_map('do_action', 'split')
 endfunction
+
+set tags+=gems.tags
+set tags+=stdlib.tags

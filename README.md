@@ -14,3 +14,11 @@ https://www.reddit.com/r/neovim/comments/ewgo9g/fzf_floating_tab_select/
 https://github.com/camspiers/dotfiles/blob/master/files/.config/nvim/init.vim#L445-L522
 
 
+
+This weekend:
+1. look at zapata, try to make your own
+3. ctags?
+
+
+Add gem-ctags https://github.com/tpope/gem-ctags and 
+https://github.com/rbenv/rbenv-default-gems to config

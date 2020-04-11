@@ -37,7 +37,7 @@ in_each_ruby_dir(){
 rubo() {
   local current_branch=$(git rev-parse --abbrev-ref HEAD)
   local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent master) | sed -ne 's/^ //p' | head -1)
-  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs rubocop
+  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs bundle exec rubocop
 }
 
 #====================
@@ -165,13 +165,19 @@ eval "$(direnv hook bash)"
 #==================================
 # Switch to large text  in iterm
 #==================================
-setProfileLargeText() {
+set_profile_large_text() {
   echo -e "\033]50;SetProfile=LargeText\a"
 }
 
-setProfileDefault() {
+set_profile_default() {
   echo -e "\033]50;SetProfile=Default\a"
 }
+
+set_profile_light() {
+  echo -e "\033]50;SetProfile=Light\a"
+}
+
+
 
 
 #==================================

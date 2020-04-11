@@ -14,3 +14,6 @@ export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 eval "$(rbenv init -)"
 
+
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.nimble/bin:$PATH"

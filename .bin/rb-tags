@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'rbconfig'
+
+def generate_tags(path, tag_file)
+  system "ctags -f #{tag_file} -R --languages=ruby --exclude='.#*' #{path}"
+end
+
+bundle_path = `bundle list --paths`.tr("\n", ' ').strip
+stdlib_path = RbConfig::CONFIG['rubylibdir']
+current_path = '.'
+
+puts '1. Generating gem tags'
+generate_tags(bundle_path, 'gems.tags')
+puts '2. Generating stdlib tags'
+generate_tags(stdlib_path, 'stdlib.tags')
+puts '3. Generating project tags'
+generate_tags(current_path, 'tags')
