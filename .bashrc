@@ -1,7 +1,7 @@
 #===================
 # Config alias
 #===================
-alias config='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
+alias dots='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
 v() {
   nvim $@
 }
@@ -88,9 +88,6 @@ if [ "$PLATFORM" = Linux ]; then
   PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 else
   __git_ps1() { :;}
-  if [ -e ~/.git-prompt.sh ]; then
-    source ~/.git-prompt.sh
-  fi
   PS1="\[\033[1;34m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
 fi
 
@@ -178,8 +175,6 @@ set_profile_light() {
 }
 
 
-
-
 #==================================
 # This solves the issue of "There are 3 other sessions using the database"
 #==================================
@@ -234,7 +229,7 @@ co() {
 # z integration
 #===============================
 
-. /usr/local/etc/profile.d/z.sh
+. ~/.bin/z.sh
 j() {
   if [[ -z "$*" ]]; then
     cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
