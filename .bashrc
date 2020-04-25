@@ -203,8 +203,8 @@ export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git'
 [ -n "$NVIM_LISTEN_ADDRESS" ] && export FZF_DEFAULT_OPTS='--no-height'
 
-if [ -x ~/.config/nvim/plugged/fzf.vim/bin/preview.rb ]; then
-  export FZF_CTRL_T_OPTS="--preview '~/.config/nvim/plugged/fzf.vim/bin/preview.rb {} | head -200'"
+if [ -x ~/.config/nvim/plugged/fzf.vim/bin/preview.sh ]; then
+  export FZF_CTRL_T_OPTS="--preview '~/.config/nvim/plugged/fzf.vim/bin/preview.sh {} | head -200'"
 fi
 
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
@@ -269,6 +269,7 @@ gb() {
   sed 's#^remotes/##'
 }
 
+# gh - git commit browse
 gh() {
   is_in_git_repo || return
   git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
@@ -312,4 +313,7 @@ if type tmux &>/dev/null; then
 fi
 source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+export RUBYFMT_USE_RELEASE=1
+alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/p/rubyfmt/rubyfmt.rb"
 

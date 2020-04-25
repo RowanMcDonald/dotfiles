@@ -1,4 +1,12 @@
 {
+  "list.maxHeight": 15,
   "coc.preferences.formatOnType": false,
-  "suggest.noselect": false
+  "suggest.noselect": false,
+  "coc.source.emoji.triggerCharacters": [":"],
+  "coc.source.emoji.filetypes": [
+    "markdown",
+    "text",
+    "gitcommit"
+  ],
+  "coc.source.word.filetypes": ["markdown"]
 }

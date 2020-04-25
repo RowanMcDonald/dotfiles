@@ -19,9 +19,6 @@ set -> { "Pry.config.history.file = #{Pry.config.history.file.tilde}" } do
 end
 
 
-
-
-
 LOG_LEVELS = [:debug, :info, :warn, :error, :fatal, :unknown]
 set -> { "Overridding rails rails logger, Rails.logger.level = #{LOG_LEVELS[Rails.logger.level]}" } do
   Rails.logger = Logger.new(STDOUT).tap do |logger|
@@ -39,13 +36,22 @@ set -> { "Loading plugins: #{Pry.plugins.keys.map{|s| 'pry-' + s }.join(', ')}" 
 end
 
 
-
-
 set -> { "Adding Array#first!" } do
   class Array
     def first!
-      raise 'more than one element' if length > 1
+      raise 'more than one element' if (respond_to?(:count) && count > 1) || length > 1
       self[0]
+    end
+  end
+end
+
+if defined?(ActiveRecord)
+  set -> { "Adding ActiveRecord::Relation#first!" } do
+    class ActiveRecord::Relation
+      def first!
+        raise 'more than one element' if (respond_to?(:count) && count > 1) || length > 1
+        self[0]
+      end
     end
   end
 end

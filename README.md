@@ -1,4 +1,8 @@
+# about:
 Strategy adopted from: https://www.atlassian.com/git/tutorials/dotfiles
+
+
+# Issues + todos
 
 projections not working outside of rails?
 
@@ -22,3 +26,5 @@ This weekend:
 
 Add gem-ctags https://github.com/tpope/gem-ctags and 
 https://github.com/rbenv/rbenv-default-gems to config
+
+https://github.com/universal-ctags/ctags vs https://github.com/tmm1/ripper-tags

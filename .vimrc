@@ -6,16 +6,11 @@
 " PLUGINS (using vim-plug)
 "=========================
 
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-" Set split to grey line
-set fillchars+=vert:\|
-hi VertSplit cterm=NONE ctermfg=NONE
-hi EndOfBuffer ctermfg=black ctermbg=black
+" if empty(glob('~/.config/nvim/autoload/plug.vim'))
+"   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" endif
 
 call plug#begin('~/.config/nvim/plugged')
 "============================
@@ -29,27 +24,19 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'rhysd/git-messenger.vim'           " nice but not needed rn
 " Plug 'mattn/gist-vim'                    " rarely use
 "   Plug 'mattn/webapi-vim'
-" Plug 'tpope/vim-rake'                    " do not use
 " Plug 'SirVer/ultisnips'                  " someday I'll get a working snippets config
-" Plug 'honza/vim-snippets'
 " Plug 'danchoi/ri.vim', { 'for': 'ruby' } " coc provides this behavior
 " Plug 'ecomba/vim-ruby-refactoring'       " usually can't remember the shortcuts
 " Plug 'ngmy/vim-rubocop'                  " not needed
 " Plug 'dstein64/vim-startuptime'          " diagnostic
 " Plug 'nelstrom/vim-textobj-rubyblock'
 
-" Do I use these?
-" Plug 'leafgarland/typescript-vim'
-" Plug 'jelera/vim-javascript-syntax'
-" Plug 'pangloss/vim-javascript'
-" Plug 'vim-python/python-syntax'
-" Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
-
 " Plug 'rhysd/unite-ruby-require.vim'
+" Plug 'camspiers/lens.vim' " auto resizing
+  " Plug 'camspiers/animate.vim'
+
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'chemzqm/denite-git'
-" Plug 'camspiers/animate.vim'
-" Plug 'camspiers/lens.vim'
 
 Plug 'tpope/vim-sensible' " normal defaults
 
@@ -66,11 +53,9 @@ Plug 'dbakker/vim-projectroot'
 Plug 'unblevable/quick-scope' " movement hints with f
 Plug 'tpope/vim-vinegar' " netrw+
 Plug 'mhinz/vim-startify'
-Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
 
 " Search
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
-Plug 'pbogut/fzf-mru.vim'
 
 " integrations
 Plug 'tpope/vim-fugitive'  " git commit
@@ -84,6 +69,22 @@ Plug 'itchyny/lightline.vim' " status line
 
 " coc plugins
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-marketplace', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-sql', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-jest', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+
+Plug 'honza/vim-snippets'
+
 
 " Ruby Support
 Plug 'tpope/vim-endwise' " adds end while you're typing
@@ -95,16 +96,30 @@ let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
 Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 " Gemfile.lock changes working dir, Gemfile does not
 
+Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
+  Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
+
+
 " other languages
 Plug 'rust-lang/rust.vim'
 let g:rust_fold = 1
 let g:rustfmt_autosave = 1
 
 " Frontend languages
-Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby'] }
+Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact'] }
+
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
   \ 'for': ['javascript', 'json', 'typescript'] }
+
+Plug 'othree/yajs.vim'
+
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'othree/javascript-libraries-syntax.vim'
+
+Plug 'HerringtonDarkholme/yats.vim'
+
+
 
 " testing
 Plug 'janko-m/vim-test' " language agnostic test running
@@ -224,6 +239,12 @@ endfun
 nnoremap <f10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<cr>
+
+" Set split to grey line
+set fillchars+=vert:\|
+hi VertSplit cterm=NONE ctermfg=NONE
+hi EndOfBuffer ctermfg=black ctermbg=black
+
 
 "==================
 " Limelight
@@ -367,6 +388,7 @@ let g:gist_open_browser_after_post = 1
 "=========================
 " Modern Rails Projections
 "=========================
+set confirm " this should let me generate
 
 " Add ability to switch to schema
 let g:rails_projections = {
@@ -379,6 +401,7 @@ let g:rails_projections = {
       \      ],
       \      "alternate": [
       \        "spec/requests/{}_spec.rb",
+      \        "spec/requests/{}_controller_spec.rb",
       \        "spec/controllers/{}_controller_spec.rb",
       \        "test/controllers/{}_controller_test.rb"
       \      ],
@@ -388,6 +411,35 @@ let g:rails_projections = {
       \      "alternate": "app/controllers/{}_controller.rb",
       \      "template": "require 'rails_helper'\n\n" .
       \        "RSpec.describe '{}' do\nend",
+      \   },
+      \   "app/models/*.rb": {
+      \     "affinity": "model",
+      \     "alternate": [
+      \       "spec/models/{}_spec.rb",
+      \     ],
+      \     "template": ["class {camelcase|capitalize|colons}", "end"],
+      \     "type": "model",
+      \   },
+      \   "spec/models/*_spec.rb": {
+      \     "affinity": "model",
+      \     "template": [
+      \       "require 'rails_helper'",
+      \       "",
+      \       "RSpec.describe {camelcase|capitalize|colons} do",
+      \       "  subject {open} described_class.new {close}",
+      \       "",
+      \       "  describe 'validations' do",
+      \       "    it 'adds an error...' do",
+      \       "    end",
+      \       "  end",
+      \       "",
+      \       "  describe '#save!' do",
+      \       "    it 'saves x...' do",
+      \       "    end",
+      \       "  end",
+      \       "end"
+      \     ],
+      \     "type": "unit test"
       \   },
       \ }
 
@@ -454,11 +506,10 @@ map <Leader>it :put =strftime('# %a %d %b %Y')<cr>o
 " find things
 nnoremap <silent> <Leader>fw :Rg <C-R><C-W><CR>
 nnoremap <Leader>fp :Rg <CR>
-nnoremap <Leader>fb :GFiles?<CR>
+nnoremap <Leader>fb :call Fzf_git_diff_files_with_dev_icons()<CR>
+nnoremap <Leader>fg :call Fzf_dev("git ls-files \| uniq")<CR>
 nnoremap <Leader>fl :Lines<CR>
-nnoremap <silent> <leader>fm :call Fzf_MRU_dev()<CR>
-" Replacing ctrl-p with cool (if slightly buggy floating window)
-nnoremap <silent> <c-p> :call Fzf_dev()<cr>
+nnoremap <silent> <c-p> :call Fzf_dev($FZF_DEFAULT_COMMAND)<cr>
 
 nnoremap <Leader>s :Startify<cr>
 
@@ -472,6 +523,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+"tags!
+nmap <silent> gt <C-]><CR>
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 "
 " Remap for rename current word
@@ -546,44 +599,44 @@ function! s:edit_file(lines)
 endfunction
 
 
-function! Fzf_dev()
+function! Fzf_dev(command)
   if (winwidth(0) >= 120)
-    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {2..} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
   else
     let l:fzf_files_options = '--expect=ctrl-v,ctrl-x'
   endif
 
   call fzf#run({
-        \ 'source': split(system($FZF_DEFAULT_COMMAND), '\n'),
+        \ 'source': a:command.' | devicon-lookup --color',
         \ 'sink*':   function('s:edit_file'),
         \ 'options': '-m --reverse ' . l:fzf_files_options,
         \ 'down':    '40%',
         \ 'window': 'call CreateCenteredFloatingWindow()'})
 endfunction
 
-function! Fzf_MRU_dev()
-  if (winwidth(0) >= 120)
-    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {1..-1} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
-  else
-    let l:fzf_files_options = '--expect=ctrl-v,ctrl-x'
-  endif
+function! Fzf_git_diff_files_with_dev_icons()
+  let l:fzf_files_options = '--ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\""'
 
+  function! s:edit_devicon_prepended_file_diff(item)
+    echom a:item
+    let l:file_path = a:item[7:-1]
+    echom l:file_path
+    let l:first_diff_line_number = system("git diff -U0 ".l:file_path." | rg '^@@.*\+' -o | rg '[0-9]+' -o | head -1")
+    execute 'silent e' l:file_path
+    execute l:first_diff_line_number
+  endfunction
 
   call fzf#run({
-        \ 'source': copy(fzf_mru#mrufiles#list()),
-        \ 'sink*':   function('s:edit_file'),
-        \ 'options': '-m --reverse --prompt "MRU>" ' . l:fzf_files_options,
-        \ 'down':    '40%',
-        \ 'window': 'call CreateCenteredFloatingWindow()'})
+        \ 'source': 'git -c color.status=always status --short --untracked-files=all | devicon-lookup --color',
+        \ 'sink':   function('s:edit_devicon_prepended_file_diff'),
+        \ 'options': '-m ' . l:fzf_files_options,
+        \ 'down':    '40%' })
 endfunction
-
 
 augroup _fzf
   autocmd!
   autocmd ColorScheme * call <sid>update_fzf_colors()
   autocmd FileType fzf tnoremap <buffer> <esc> <c-c>
-
-  tnoremap <silent><c-f> <C-\><c-n>:q! <enter> :call Fzf_MRU_dev()i<cr>
 augroup END
 
 function! CreateCenteredFloatingWindow()
@@ -610,17 +663,13 @@ function! CreateCenteredFloatingWindow()
 endfunction
 let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
-let g:rg_command = '
-  \ rg --line-number --smart-case --hidden
-  \ -g "*.{sql,R,rs,java,jbuilder,js,jsx,json,php,ctp,css,scss,md,styl,jade,html,config,py,cpp,c,go,hs,rb,erb,conf}"
-  \ -g "!{public,.git,node_modules,vendor}/*" '
+" I don't /think/ I'm using this?
+" let g:rg_command = '
+"   \ rg --line-number --smart-case --hidden
+"   \ -g "*.{sql,R,rs,java,jbuilder,js,jsx,json,php,ctp,css,scss,md,styl,jade,html,config,py,cpp,c,go,hs,rb,erb,conf}"
+"   \ -g "!{public,.git,node_modules,vendor}/*" '
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
-let g:fzf_mru_no_sort = 1
 
 
 "===============================
@@ -629,13 +678,22 @@ let g:fzf_mru_no_sort = 1
 let g:startify_custom_header_quotes = [
     \ ["Moo"],
     \ ]
+
+function! s:list_commits()
+  let git = 'git'
+  let commits = systemlist(git .' log --oneline | head -n10')
+  let git = 'G'. git[1:]
+  return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')
+endfunction
+
 let g:startify_lists = [
-      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-      \ { 'type': 'files',     'header': ['   MRU']            },
-      \ { 'type': 'sessions',  'header': ['   Sessions']       },
-      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ { 'type': 'dir',                       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'sessions',                  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks',                 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',                  'header': ['   Commands']       },
+      \ { 'type': function('s:list_commits'),  'header': ['   Commits']       },
       \ ]
+
 let g:startify_enable_special = 0
 let g:startify_session_persistence = 1
 let g:startify_files_number=20
@@ -656,6 +714,8 @@ autocmd User StartifyBufferOpened ProjectRootCD
 "===========================
 " Settings for Coc
 "===========================
+autocmd FileType Ruby let b:coc_root_patterns = ['Gemfile']
+
 " if hidden is not set, TextEdit might fail.
 set hidden
 
@@ -683,7 +743,9 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<tab>'
+" Navigate forward and backward in snippets
+let g:coc_snippet_next = '<C-j>'
+let g:coc_snippet_prev = '<C-k>'
 
 inoremap <silent><expr> <c-space> coc#refresh()
 " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -725,7 +787,7 @@ if !exists('g:rootmarkers')
   let g:rootmarkers = []
 endif
 
-let g:rootmarkers += ['Gemfile', 'package.json']
+let g:rootmarkers += ['Gemfile', 'package.json', '.gitignore']
 
 "=================================
 " Strip whitespace
@@ -744,11 +806,11 @@ autocmd FileType markdown let b:noStripWhitespace=1
 " spelling
 "================================
 
-set spelllang=en
-autocmd FileType markdown setlocal spell
-autocmd FileType eruby setlocal spell
-" autocmd BufRead,BufNewFile *.rb setlocal spell
-let ruby_spellcheck_strings = 1
+
+autocmd BufRead,BufNewFile *.md setlocal spell spelllang=en_us
+autocmd FileType gitcommit setlocal spell spelllang=en_us
+set complete+=kspell
+
 hi clear SpellBad
 hi SpellBad cterm=underline
 hi SpellBad ctermfg=red
@@ -887,5 +949,34 @@ function! s:denite_my_settings() abort
   \ denite#do_map('do_action', 'split')
 endfunction
 
-set tags+=gems.tags
-set tags+=stdlib.tags
+
+" :Bashrockets   {:foo => 'bar', :boston => 'rocks'}  ==>   {foo: 'bar', boston: 'rocks'}
+" :Hashrockets   {foo: 'bar', boston: 'rocks'}        ==>   {:foo => 'bar', :boston => 'rocks'}
+"
+" You can select a range before entering these commands. They will apply the
+" conversion to all the text in the range.
+"
+" You can also type the first few characters of either command and try to let
+" Vim tab-autocomplete it.
+"
+" Daniel Choi http://github.com/danchoi
+"
+function! s:hashrockets() range
+  let lnum = a:firstline
+  while lnum <= a:lastline
+    let newline = substitute(getline(lnum), '\(\w\+\):', ':\1 =>', 'g')
+    call setline(lnum, newline)
+    let lnum += 1
+  endwhile
+endfunction
+
+function! s:bashrockets() range
+  let lnum = a:firstline
+  while lnum <= a:lastline
+    let newline = substitute(getline(lnum), ':\(\w\+\)\s*=>', '\1:', 'g')
+    call setline(lnum, newline)
+    let lnum += 1
+  endwhile
+endfunction
+command! -range Bashrockets :<line1>,<line2>call s:bashrockets() | update
+command! -range Hashrockets :<line1>,<line2>call s:hashrockets() | update
