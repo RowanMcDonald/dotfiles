@@ -1,10 +1,7 @@
 #===================
-# Config alias
+# Dotfiles tracking alias
 #===================
 alias dots='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
-v() {
-  nvim $@
-}
 
 #====================
 # Miscellaneous
@@ -128,33 +125,12 @@ alias android='open -a /Applications/Android\ Studio.app .'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-###========================
-### Local gemfile setup 🐲
-###========================
-### bundle config --global gemfile ~/.config/bundler/Gemfile.local
-###
-
-### function bundle() {
-###   bundle="$(type -P bundle)"
-
-###   if [ -r "$BUNDLE_GEMFILE" ] && [ -r Gemfile ] &&
-###      [ "$BUNDLE_GEMFILE" != Gemfile ] &&
-###      [[ "$1" =~ ^(|install|update)$ ]]; then
-###     BUNDLE_GEMFILE=Gemfile "$bundle" "$@"
-###     cp Gemfile.lock "${BUNDLE_GEMFILE}.lock"
-###   fi
-
-###   "$bundle" "$@"
-### }
-### use modes be_local, be_stop_local, be_reset_local
-###
-
 #==================================
 # MAC CONF
 #==================================
 
 notify() {
-				osascript -e "display notification \"$@\" with title \"iterm notification\""
+	osascript -e "display notification \"$@\" with title \"iterm notification\""
 }
 
 eval "$(direnv hook bash)"
@@ -298,16 +274,17 @@ if [[ $- =~ i ]]; then
   # bind '"\C-g\C-s": "$(stash)\e\C-e\er"'
 fi
 
+
 alias see='ruby --disable=gems /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
 alias seer='ruby /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
 
+
 if type tmux &>/dev/null; then
   if [ "$TERM" == "xterm-256color" ] && [ "$TERM_PROGRAM" != "iTerm.app" ]; then
+    source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
     [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit; }
   fi
 fi
-source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 export RUBYFMT_USE_RELEASE=1
 alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/p/rubyfmt/rubyfmt.rb"

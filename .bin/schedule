@@ -9,4 +9,4 @@ pushd ~/.config/osx >/dev/null
       ln -sf "$PWD/$agent" ~/Library/LaunchAgents
       launchctl load ~/Library/LaunchAgents/$agent
   done
-popd
+popd > /dev/null

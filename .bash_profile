@@ -3,6 +3,7 @@ export PATH=$PATH:~/.local/bin
 export PATH="/usr/local/sbin:$PATH"
 
 export EDITOR=/usr/local/bin/nvim
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export VISUAL='nvim'
 export INPUTRC="$HOME/.inputrc"
 export RIPGREP_CONFIG_PATH=~/.rgrc

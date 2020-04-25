@@ -6,6 +6,7 @@
 " PLUGINS (using vim-plug)
 "=========================
 
+" this is commented out for startup speed but it will auto install vim-plug
 " if empty(glob('~/.config/nvim/autoload/plug.vim'))
 "   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 "     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -99,7 +100,6 @@ Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
   Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
 
-
 " other languages
 Plug 'rust-lang/rust.vim'
 let g:rust_fold = 1
@@ -114,12 +114,15 @@ Plug 'prettier/vim-prettier', {
 
 Plug 'othree/yajs.vim'
 
+" jsx support
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'othree/javascript-libraries-syntax.vim'
 
+" Typescript support
 Plug 'HerringtonDarkholme/yats.vim'
 
-
+" plist support
+Plug 'darfink/vim-plist'
 
 " testing
 Plug 'janko-m/vim-test' " language agnostic test running
