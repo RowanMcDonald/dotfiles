@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+pushd ~/.config/osx >/dev/null
+  agents=(*.plist)
+
+  launchctl unload ~/Library/LaunchAgents/rowan.*
+
+  for agent in "${agents[@]}"; do
+      ln -sf "$PWD/$agent" ~/Library/LaunchAgents
+      launchctl load ~/Library/LaunchAgents/$agent
+  done
+popd
