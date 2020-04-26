@@ -4,7 +4,7 @@
 alias dots='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
 
 #====================
-# Miscellaneous
+# Miscellaneous aliases
 #====================
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
@@ -13,20 +13,18 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 #====================
 alias bi='bundle install'
 alias ber='bundle exec rspec'
-LOCAL_GEMFILE=Gemfile.local
-be() {
-   bundle exec $@
-}
+alias be='bundle exec'
 
+# Run a command in each subdirectory of a
+# git tracked directory that has a Gemfile.
 in_each_ruby_dir(){
-  # this is not working :/
   local root=$(git rev-parse --show-toplevel)
   cd $root
 
   for g in $(find . -name 'Gemfile'); do
-    cd $(dirname ${g})
+    pushd $(dirname ${g})
     $@
-    cd ..
+    popd
   done
 }
 
@@ -53,10 +51,6 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 
 ## add command for local changes to master
 alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
-
-# alias download_all=`curl -u <token>:x-oauth-basic -s https://api.github.com/orgs/<organization>/repos\?per_page\=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'`
-alias gfx='git clean -fdx'
-
 
 ##====================
 ## The 'ls' Family
@@ -275,8 +269,11 @@ if [[ $- =~ i ]]; then
 fi
 
 
-alias see='ruby --disable=gems /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
-alias seer='ruby /Users/rowanmcdonald/p/see_rails/build/see_rails.rb'
+#===================
+# Experimenetal rails CLI
+#===================
+alias see='ruby --disable=gems /Users/rowanmcdonald/w/see_rails/build/see_rails.rb'
+alias seer='ruby /Users/rowanmcdonald/w/see_rails/build/see_rails.rb'
 
 
 if type tmux &>/dev/null; then
@@ -287,5 +284,5 @@ if type tmux &>/dev/null; then
 fi
 
 export RUBYFMT_USE_RELEASE=1
-alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/p/rubyfmt/rubyfmt.rb"
+alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/w/rubyfmt/rubyfmt.rb"
 

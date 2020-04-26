@@ -12,10 +12,18 @@ set -> { "Pry.editor = #{Pry.editor}" } do
 end
 
 
-set -> { "Pry.config.history.file = #{Pry.config.history.file.tilde}" } do
-  local_history = `git rev-parse --show-toplevel`.strip + '/tmp/history.rb' if rails?
+if Pry.config.history.respond_to? :file=
+  set -> { "Pry.config.history.file = #{Pry.config.history.file.tilde}" } do
+    local_history = `git rev-parse --show-toplevel`.strip + '/tmp/history.rb' if rails?
 
-  Pry.config.history.file = local_history || File.expand_path('~/.history.rb')
+    Pry.config.history.file = local_history || File.expand_path('~/.history.rb')
+  end
+else
+  set -> { "Pry.config.history_file = #{Pry.config.history_file.tilde}" } do
+    local_history = `git rev-parse --show-toplevel`.strip + '/tmp/history.rb' if rails?
+
+    Pry.config.history_file = local_history || File.expand_path('~/.history.rb')
+  end
 end
 
 
@@ -32,7 +40,11 @@ end if rails? && Rails.env.development?
 
 
 set -> { "Loading plugins: #{Pry.plugins.keys.map{|s| 'pry-' + s }.join(', ')}" } do
-  Pry.load_plugins if Pry.config.should_load_plugins
+  begin
+    Pry.load_plugins if Pry.config.should_load_plugins
+  rescue => e
+    puts "  !! could not load plugins"
+  end
 end
 
 

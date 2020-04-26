@@ -1,0 +1,101 @@
+#!/usr/bin/env ruby
+#
+# Built ontop of the hub program, this should clone and keep up to
+# date any repositories from organizations that you subscribe to.
+# Organizations can be specified in a $HOME/.project_refresh.yml file
+#
+# hub api https://api.github.com/orgs/Betterment/repos?page=1 | rb -l 'JSON.load(self).count'
+
+require 'yaml'
+require 'json'
+require 'pry'
+
+QUERY = <<~GRAPHQL
+  query($endCursor: String) {
+    repositoryOwner(login: "%s") {
+      repositories(first: 100, after: $endCursor) {
+        nodes {
+          name
+          owner {
+            login
+          }
+          isFork
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
+GRAPHQL
+
+Refresher = Struct.new(:orgs, :workdir) do
+  def self.from(yml)
+    orgs = yml["orgs"].map { |o| Org.new o }
+    workdir = Workdir.new(yml["workdir"])
+    new(orgs, workdir)
+  end
+
+  def projects
+    @projects ||= orgs.flat_map do |org|
+      org.repos.map { |repo| Project.new(workdir, repo) }
+    end
+  end
+
+  def run!
+    workdir.inside { projects.each(&:refresh!) }
+  end
+end
+
+Org = Struct.new(:name) do
+  def repos; @repos ||= Repo.fetch_for(name); end
+end
+
+Project = Struct.new(:workdir, :repo) do
+  def refresh!
+    puts "==> Refreshing #{repo.name}"
+    if workdir.contains?(repo)
+      workdir.inside(repo.name) { repo.pull! }
+    else
+      repo.clone!
+    end
+  end
+end
+
+Workdir = Struct.new(:path) do
+  def absolute_path; @absolute_path ||= File.expand_path(path); end
+
+  def inside(subdir = nil)
+    Dir.chdir(File.join([absolute_path, subdir].compact)) { yield }
+  end
+
+  def subdirs
+    @subdirs ||= Dir['*/'].map { |dir| [dir.delete_suffix('/'), true] }.to_h
+  end
+
+  def contains?(repo); subdirs[repo.name]; end
+end
+
+Repo = Struct.new(:name, :owner) do
+  class << self
+    def query(org); `hub api --paginate graphql -f query='#{QUERY % [org]}'`; end
+
+    def parse_node(node); new(node["name"], node["owner"]["login"]); end
+
+    def parse_json(page)
+      JSON.parse(page)["data"]["repositoryOwner"]["repositories"]["nodes"]
+    end
+    def fetch_for(org)
+      query(org).split("\n").flat_map(&method(:parse_json)).map(&method(:parse_node))
+    end
+  end
+
+  def pull!; `git checkout master; git fetch; git pull`; end
+
+  def clone!; `hub clone #{owner}/#{name}`; end
+end
+
+yml = YAML.load(File.read File.join(ENV['HOME'], '.project_refresh.yml'))
+
+Refresher.from(yml).run!
