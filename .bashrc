@@ -32,7 +32,7 @@ in_each_ruby_dir(){
 rubo() {
   local current_branch=$(git rev-parse --abbrev-ref HEAD)
   local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent master) | sed -ne 's/^ //p' | head -1)
-  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs bundle exec rubocop
+  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs bundle exec rubocop --auto-correct
 }
 
 #====================
@@ -82,9 +82,6 @@ else
   PS1="\[\033[1;34m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
 fi
 
-export HISTFILESIZE=
-export HISTSIZE=
-export HISTTIMEFORMAT="%d/%m/%y %T "
 export BAT_THEME="TwoDark"
 
 #====================
@@ -286,3 +283,35 @@ fi
 export RUBYFMT_USE_RELEASE=1
 alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/w/rubyfmt/rubyfmt.rb"
 
+
+
+#===================
+# Toggle dir stack h/t Omar.
+#===================
+
+toggle_top_two_stack() {
+    if [[ "$1" != "" ]]
+    then
+        pushd "$1"
+        return
+    fi
+    if [[ "$top_stack" == "" ]]
+    then
+        tmp_top_stack=$(pwd)
+        tmp_top_stack_display=$(pwd | sed "s#$HOME# ~#")
+        popd >/dev/null
+        if [[ "$?" == "0" ]]
+        then
+            top_stack="$tmp_top_stack"
+            top_stack_display="$tmp_top_stack_display"
+        else
+            echo "nowhere to go"
+        fi
+    else
+        pushd "$top_stack" >/dev/null
+        top_stack=""
+        top_stack_display=""
+    fi
+    export top_stack
+}
+alias kk="toggle_top_two_stack"

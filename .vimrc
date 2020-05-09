@@ -83,6 +83,7 @@ Plug 'fannheyward/coc-marketplace', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-sql', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-jest', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'honza/vim-snippets'
 
@@ -106,7 +107,7 @@ let g:rust_fold = 1
 let g:rustfmt_autosave = 1
 
 " Frontend languages
-Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact'] }
+Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'markdown'] }
 
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
@@ -247,7 +248,7 @@ nnoremap <f10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> 
 set fillchars+=vert:\|
 hi VertSplit cterm=NONE ctermfg=NONE
 hi EndOfBuffer ctermfg=black ctermbg=black
-
+hi HighlightedyankRegion ctermfg=darkgrey ctermbg=0
 
 "==================
 " Limelight
@@ -518,6 +519,7 @@ nnoremap <Leader>s :Startify<cr>
 
 " coq
 nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
+nnoremap <silent> <space>y  :<C-u>CocList yank<cr>
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)

@@ -15,6 +15,20 @@ export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 eval "$(rbenv init -)"
 
+#======================
+# History
+# Unsetting size doesn't work.
+#======================
+export HISTFILESIZE=1000000
+export HISTSIZE=1000000
+# Ignore duplicate commands + those starting with a space
+export HISTCONTROL=ignoreboth
+# Ignore common commands
+export HISTIGNORE='ls:bg:fg:history:gl:gs:gcm:cl:vim:v:tldr'
+export HISTTIMEFORMAT='%F %T '
+# Store history as it is written
+export PROMPT_COMMAND='history -a'
+
 
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.nimble/bin:$PATH"

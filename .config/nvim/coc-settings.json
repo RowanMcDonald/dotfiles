@@ -8,5 +8,6 @@
     "text",
     "gitcommit"
   ],
-  "coc.source.word.filetypes": ["markdown"]
+  "coc.source.word.filetypes": ["markdown"],
+  "yank.highlight.duration": 300
 }
