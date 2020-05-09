@@ -43,6 +43,13 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'tpope/vim-sensible' " normal defaults
 
+" Find and replace using quickfix
+Plug 'wincent/ferret' " probably don't need this, could simplify with grep
+Plug 'stefandtw/quickfix-reflector.vim'
+
+Plug 'tpope/vim-unimpaired' " faster quickfix nav
+
+
 " Code manipulation
 Plug 'tpope/vim-commentary' " gcc
 Plug 'tpope/vim-surround'
@@ -506,7 +513,6 @@ map <Leader>it :put =strftime('# %a %d %b %Y')<cr>o
 " find things
 nnoremap <silent> <Leader>fw :Rg <C-R><C-W><CR>
 nnoremap <Leader>fp :Rg <CR>
-nnoremap <Leader>fb :call Fzf_git_diff_files_with_dev_icons()<CR>
 nnoremap <Leader>fg :call Fzf_dev("git ls-files \| uniq")<CR>
 nnoremap <Leader>fl :Lines<CR>
 nnoremap <silent> <c-p> :call Fzf_dev($FZF_DEFAULT_COMMAND)<cr>
@@ -585,26 +591,49 @@ function! s:update_fzf_colors()
         \ empty(cols) ? '' : (' --color='.join(cols, ','))
 endfunction
 
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 function! s:edit_file(lines)
   if len(a:lines) < 2 | return | endif
 
   let l:cmd = get({'ctrl-x': 'split',
-               \ 'ctrl-v': 'vertical split',
-               \ 'ctrl-t': 'tabe'}, a:lines[0], 'e')
+                 \ 'ctrl-q': 'quickfix',
+                 \ 'ctrl-v': 'vertical split',
+                 \ 'ctrl-t': 'tabe'}, a:lines[0], 'e')
+  if l:cmd == 'quickfix'
+    let l:list = []
+    for l:item in a:lines[1:]
+      let l:pos = stridx(l:item, ' ')
+      let l:file_path = l:item[pos+1:-1]
+      call add(l:list, l:file_path)
+    endfor
 
-  for l:item in a:lines[1:]
-    let l:pos = stridx(l:item, ' ')
-    let l:file_path = l:item[pos+1:-1]
-    execute 'silent '. l:cmd . ' ' . l:file_path
-  endfor
+    call s:build_quickfix_list(l:list)
+  else
+    for l:item in a:lines[1:]
+      let l:pos = stridx(l:item, ' ')
+      let l:file_path = l:item[pos+1:-1]
+      execute 'silent '. l:cmd . ' ' . l:file_path
+    endfor
+  endif
 endfunction
 
 
 function! Fzf_dev(command)
   if (winwidth(0) >= 120)
-    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {2..} | head -'.&lines.'" --expect=ctrl-v,ctrl-x'
+    let l:fzf_files_options = '--preview "bat --style=numbers,changes --color always {2..} | head -'.&lines.'" --expect=ctrl-v,ctrl-x,ctrl-q'
   else
-    let l:fzf_files_options = '--expect=ctrl-v,ctrl-x'
+    let l:fzf_files_options = '--expect=ctrl-v,ctrl-x,ctrl-q'
   endif
 
   call fzf#run({
