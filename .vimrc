@@ -124,6 +124,8 @@ Plug 'prettier/vim-prettier', {
 
 Plug 'othree/yajs.vim'
 
+Plug 'kchmck/vim-coffee-script'
+
 " jsx support
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'othree/javascript-libraries-syntax.vim'
