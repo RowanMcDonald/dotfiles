@@ -11,10 +11,6 @@ export RIPGREP_CONFIG_PATH=~/.rgrc
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
 
-[ -f ~/.bashrc ] && source ~/.bashrc
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
-eval "$(rbenv init -)"
-
 #======================
 # History
 # Unsetting size doesn't work.
@@ -27,8 +23,14 @@ export HISTCONTROL=ignoreboth
 export HISTIGNORE='ls:bg:fg:history:gl:gs:gcm:cl:vim:v:tldr'
 export HISTTIMEFORMAT='%F %T '
 # Store history as it is written
+# If we set this after bashrc is sourced, it clobbers both direnv + z
 export PROMPT_COMMAND='history -a'
 
 
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.nimble/bin:$PATH"
+
+[ -f ~/.bashrc ] && source ~/.bashrc
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+eval "$(rbenv init -)"
+
