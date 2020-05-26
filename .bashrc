@@ -1,7 +1,7 @@
 #===================
 # Dotfiles tracking alias
 #===================
-alias dots='/usr/bin/git --git-dir=/Users/rowanmcdonald/.cfg/ --work-tree=/Users/rowanmcdonald'
+alias dots='/usr/bin/git --git-dir=/Users/rowanmcdonald/dotfiles/ --work-tree=/Users/rowanmcdonald'
 
 #====================
 # Miscellaneous aliases
