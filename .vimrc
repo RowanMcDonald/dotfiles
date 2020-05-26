@@ -6,12 +6,11 @@
 " PLUGINS (using vim-plug)
 "=========================
 
-" this is commented out for startup speed but it will auto install vim-plug
-" if empty(glob('~/.config/nvim/autoload/plug.vim'))
-"   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 call plug#begin('~/.config/nvim/plugged')
 "============================
@@ -201,7 +200,7 @@ set wildignore+=node_modules/*,bower_components/*
 "=========================
 " Plugin dependecies
 "=========================
-let g:python_host_prog = '~/.pyenv/versions/2.7.16/bin/python'
+let g:python_host_prog = '~/.pyenv/versions/2.7.15/bin/python'
 let g:python3_host_prog = '~/.pyenv/versions/3.7.2/bin/python'
 let g:python_host_skip_check=1
 let g:python3_host_skip_check=1
@@ -810,7 +809,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-let g:coc_node_path = "/Users/rowanmcdonald/.nodenv/versions/8.15.1/bin/node"
+let g:coc_node_path = "~/.nodenv/versions/14.3.0/bin/node"
 
 "=================================
 " configure project root

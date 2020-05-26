@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+echo "Cloning Dotfiles"
+cd
+function dots {
+   /usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME $@
+}
+git clone --bare git@github.com:RowanMcDonald/dotfiles.git $HOME/dotfiles
+dots checkout
+if [ $? = 0 ]; then
+  echo "Checked out config.";
+  else
+    mkdir -p .dotfiles-backup
+    echo "Backing up pre-existing dot files.";
+    dots checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .dotfiles-backup/{}
+fi;
+dots config --local status.showUntrackedFiles no
+
+touch .private-config
+source .bash_profile
+
+echo "Brew bundle"
+brew bundle
+pyenv install 2.7.15
+pyenv install 3.7.2
+nodenv install 8.15.1
+brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+
