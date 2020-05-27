@@ -27,10 +27,10 @@ shopt -s histappend
 shopt -s cdspell
 
 # If set, a command name that is the name of a directory is executed as if it were the argument to the cd command. This option is only used by interactive shells.
-shopt -s autocd
+[ "${BASH_VERSINFO:-0}" -ge 4 ] && shopt -s autocd
 
 # If set, the pattern ‘**’ used in a filename expansion context will match all files and zero or more directories and subdirectories. If the pattern is followed by a ‘/’, only directories and subdirectories match.
-shopt -s globstar
+[ "${BASH_VERSINFO:-0}" -ge 4 ] && shopt -s globstar
 
 # If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
 shopt -s cmdhist

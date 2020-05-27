@@ -3,6 +3,9 @@
 #======================
 # Basic
 #======================
+# Ugh, not switching to zsh
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 export EDITOR=/usr/local/bin/nvim
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export VISUAL='nvim'

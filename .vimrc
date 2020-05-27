@@ -1,10 +1,10 @@
+" vim: set fdm=marker fmr={{{,}}} fdl=0 :
+
 "============================================================================
 " NEOVIM config of Rowan McDonald // heavily cargo culted
 "============================================================================
 
-"=========================
-" PLUGINS (using vim-plug)
-"=========================
+" Plugins {{{
 
 call plug#begin('~/.config/nvim/plugged')
 "============================
@@ -33,6 +33,7 @@ call plug#begin('~/.config/nvim/plugged')
 " existing stuff
 " Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'chemzqm/denite-git'
+" Plug 'junegunn/vim-easy-align' I just never use it.
 
 Plug 'tpope/vim-sensible' " normal defaults
 
@@ -49,7 +50,6 @@ Plug 'tpope/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim' " use gS
 Plug 'andymass/vim-matchup'
 Plug 'arthurxavierx/vim-caser'
-Plug 'junegunn/vim-easy-align'
 
 " Navigation
 Plug 'dbakker/vim-projectroot'
@@ -94,9 +94,6 @@ Plug 'honza/vim-snippets'
 Plug 'tpope/vim-endwise' " adds end while you're typing
 Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
-let g:ruby_path = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
-let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
-
 Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 " Gemfile.lock changes working dir, Gemfile does not
 
@@ -105,9 +102,6 @@ Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
 
 " other languages
 Plug 'rust-lang/rust.vim'
-let g:rust_fold = 1
-let g:rustfmt_autosave = 1
-
 " Frontend languages
 Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'markdown'] }
 
@@ -139,10 +133,9 @@ Plug 'glts/vim-textobj-comment'
 
 Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
 call plug#end()
+" }}}
 
-""======================
-" General vim settings
-""======================
+" General {{{
 
 set nocompatible " required by at least vim-textobj-rubyblock
 runtime macros/matchit.vim "use `%` to navigate between do ... end
@@ -187,21 +180,28 @@ set wildignore+=.DS_Store,.git,.hg,.svn
 set wildignore+=*~,*.swp,*.tmp
 set wildignore+=node_modules/*,bower_components/*
 
-"=========================
-" Macros
-"=========================
+" }}}
+
+" Lang plugins {{{
 
 "=========================
 " Plugin dependecies
 "=========================
 let g:python_host_prog = '~/.pyenv/versions/2.7.15/bin/python'
 let g:python3_host_prog = '~/.pyenv/versions/3.7.2/bin/python'
+
 let g:python_host_skip_check=1
 let g:python3_host_skip_check=1
 
-"=========================
-" Goyo
-"=========================
+let g:ruby_path = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
+let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
+
+let g:rust_fold = 1
+let g:rustfmt_autosave = 1
+
+" }}}
+
+" Goyo && colors {{{
 
 let g:goyo_width=150
 
@@ -283,77 +283,35 @@ let g:lightline = {
       \ },
       \ }
 
-"==========================
-" Easy Align
-"==========================
-let g:easy_align_delimiters = {
-\ '>': { 'pattern': '>>\|=>\|>' },
-\ '\': { 'pattern': '\\' },
-\ '/': { 'pattern': '//\+\|/\*\|\*/', 'delimiter_align': 'l', 'ignore_groups': ['!Comment'] },
-\ ']': {
-\     'pattern':       '\]\zs',
-\     'left_margin':   0,
-\     'right_margin':  1,
-\     'stick_to_left': 0
-\   },
-\ ')': {
-\     'pattern':       ')\zs',
-\     'left_margin':   0,
-\     'right_margin':  1,
-\     'stick_to_left': 0
-\   },
-\ 'f': {
-\     'pattern': ' \(\S\+(\)\@=',
-\     'left_margin': 0,
-\     'right_margin': 0
-\   },
-\ 'd': {
-\     'pattern': ' \ze\S\+\s*[;=]',
-\     'left_margin': 0,
-\     'right_margin': 0
-\   }
-\ }
+" }}}
 
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-"==========================
-" Make splits easier
-"==========================
+" Splits {{{
 map <C-J> <C-W><C-J>
 map <C-K> <C-W><C-K>
 map <C-L> <C-W><C-L>
 map <C-H> <C-W><C-H>
 
-"=========================
-" Make commands faster
-"=========================
+" }}}
+
+" Basic mapping {{{
 nmap ; :
 
 " fix ambiguity around :E<enter>
 command! -nargs=* -bar -bang -count=0 -complete=dir E Explore <args>
+" }}}
 
-"=========================
-" Saving
-"=========================
+" Saving {{{
 autocmd BufWritePre *.rb :%s/\s\+$//e
-
 imap <C-S> <Esc>:w<CR>a
+" }}}
 
-"=========================
-" Netrw
-"=========================
-" let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
+" Netrw {{{
 let g:netrw_preview = 1 " sets preview window vertical
 let g:netrw_alto = 0
 let g:netrw_winsize = 40
+" }}}
 
-"=========================
-" vim test
-"=========================
+" Test {{{
 
 " nice test splits?
 " https://gist.github.com/adamzaninovich/5b9c7544cb0f5e746f75
@@ -386,17 +344,15 @@ if has('nvim')
   command! -nargs=? VT call OpenTermV(<q-args>)
   command! -nargs=? HT call OpenTermH(<q-args>)
 endif
+" }}}
 
-"=========================
-" Gist
-"=========================
+" Gist {{{
 let g:gist_post_private = 1
 let g:gist_show_privates = 1
 let g:gist_open_browser_after_post = 1
+" }}}
 
-"=========================
-" Modern Rails Projections
-"=========================
+" Projections {{{
 set confirm " this should let me generate
 
 " Add ability to switch to schema
@@ -452,15 +408,15 @@ let g:rails_projections = {
       \   },
       \ }
 
-"=========================
-"  NVIM terminal config https://github.com/onivim/oni/issues/962
-"=========================
+" }}}
 
+"  NVIM terminal config {{{
+
+"  https://github.com/onivim/oni/issues/962
 autocmd TermOpen * setlocal nonumber norelativenumber
+" }}}
 
-"=========================
-"  Emmet configs
-"=========================
+" Emmet configs {{{
 let g:user_emmet_leader_key=','
 let g:user_emmet_settings = {
 \  'javascript.jsx' : {
@@ -473,15 +429,13 @@ let g:user_emmet_settings = {
 \      'extends': 'jsx',
 \  },
 \}
+" }}}
 
-"=========================
-" Rubocop config
-"=========================
+" Rubocop config {{{
 let g:vimrubocop_keymap = 0
+" }}}
 
-"=========================
-" Leader commands
-"=========================
+" Leader commands {{{
 let mapleader = "\<SPACE>"
 
 " splitjoin =
@@ -521,41 +475,12 @@ nnoremap <silent> <space>y  :<C-u>CocList yank<cr>
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 "tags!
 nmap <silent> gt <C-]><CR>
 nnoremap <silent> K :call <SID>show_documentation()<CR>
-"
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+" }}}
 
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
-
-
-"=========================
-" FZF support
-"=========================
+" FZF support {{{
 " https://github.com/junegunn/fzf.vim/issues/59
 function! s:update_fzf_colors()
   let rules =
@@ -695,11 +620,9 @@ let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 "   \ -g "!{public,.git,node_modules,vendor}/*" '
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+" }}}
 
-
-"===============================
-" Startify options
-"===============================
+" Startify options {{{
 let g:startify_custom_header_quotes = [
     \ ["Moo"],
     \ ]
@@ -723,11 +646,12 @@ let g:startify_enable_special = 0
 let g:startify_session_persistence = 1
 let g:startify_files_number=20
 let g:startify_bookmarks = [
-      \ {'clc': '~/w/for_business/clinic/'},
+      \ {'aa': '~/w/for_business/auditable_actions/'},
+      \ {'b@': '~/w/for_business/@betterment/b4b/'},
       \ {'bb': '~/w/for_business/b4b/'},
       \ {'bcore': '~/w/for_business/b4b_core/'},
-      \ {'b@': '~/w/for_business/@betterment/b4b/'},
-      \ {'aa': '~/w/for_business/auditable_actions/'},
+      \ {'ch': '~/w/retail/checking/'},
+      \ {'clc': '~/w/for_business/clinic/'},
       \ {'rt': '~/w/retail/retail/'},
       \ {'recore': '~/w/retail/retail_core/'},
       \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
@@ -735,10 +659,9 @@ let g:startify_bookmarks = [
       \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD
+" }}}
 
-"===========================
-" Settings for Coc
-"===========================
+" Settings for Coc {{{
 autocmd FileType Ruby let b:coc_root_patterns = ['Gemfile']
 
 " if hidden is not set, TextEdit might fail.
@@ -802,21 +725,17 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" }}}
 
-let g:coc_node_path = "~/.nodenv/versions/14.3.0/bin/node"
-
-"=================================
-" configure project root
-"=================================
+" configure project root {{{
 if !exists('g:rootmarkers')
   let g:rootmarkers = []
 endif
 
 let g:rootmarkers += ['Gemfile', 'package.json', '.gitignore']
+" }}}
 
-"=================================
-" Strip whitespace
-"=================================
+" Strip whitespace {{{
 fun! StripTrailingWhitespace()
     " Only strip if the b:noStripeWhitespace variable isn't set
     if exists('b:noStripWhitespace')
@@ -826,12 +745,9 @@ fun! StripTrailingWhitespace()
 endfun
 autocmd BufWritePre * call StripTrailingWhitespace()
 autocmd FileType markdown let b:noStripWhitespace=1
+" }}}
 
-"================================
-" spelling
-"================================
-
-
+" spelling {{{
 autocmd BufRead,BufNewFile *.md setlocal spell spelllang=en_us
 autocmd FileType gitcommit setlocal spell spelllang=en_us
 set complete+=kspell
@@ -839,25 +755,23 @@ set complete+=kspell
 hi clear SpellBad
 hi SpellBad cterm=underline
 hi SpellBad ctermfg=red
+" }}}
 
-"================================
-" Split join (gS, gJ)
-"================================
+" Split join (gS, gJ) {{{
 let g:splitjoin_ruby_curly_braces = 0
 let g:splitjoin_ruby_hanging_args = 0
 let g:splitjoin_trailing_comma = 1
+" }}}
 
-"================================
-" Quick scope - press f see highlights
-"================================
-
+" Quick scope - press f see highlights {{{
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+" }}}
 
-"===============================
-" matchup
-"===============================
+" matchup {{{
 let g:matchup_matchparen_enabled=0 " do not highlight matches
+" }}}
 
+" Ruby hash transforms {{{
 " :Bashrockets   {:foo => 'bar', :boston => 'rocks'}  ==>   {foo: 'bar', boston: 'rocks'}
 " :Hashrockets   {foo: 'bar', boston: 'rocks'}        ==>   {:foo => 'bar', :boston => 'rocks'}
 "
@@ -888,3 +802,4 @@ function! s:bashrockets() range
 endfunction
 command! -range Bashrockets :<line1>,<line2>call s:bashrockets() | update
 command! -range Hashrockets :<line1>,<line2>call s:hashrockets() | update
+" }}}
