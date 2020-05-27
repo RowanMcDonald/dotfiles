@@ -19,10 +19,23 @@ dots config --local status.showUntrackedFiles no
 touch .private-config
 source .bash_profile
 
+if ! type brew 2> /dev/null; then
+  echo 'installing brew'
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+  brew update
+fi
+
 echo "Brew bundle"
 brew bundle
 pyenv install 2.7.15
 pyenv install 3.7.2
 nodenv install 8.15.1
 brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +'PlugInstall --sync' +qa
+sudo chpass -s /usr/local/bin/bash $USER
+(brew --prefix)/opt/fzf/install
 
+cargo install devicon-lookup

@@ -1,0 +1,48 @@
+# vi: ft=bash
+
+#====================
+# Miscellaneous
+#====================
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+alias android='open -a /Applications/Android\ Studio.app .'
+
+#====================
+# Ruby
+#====================
+alias bi='bundle install'
+alias ber='bundle exec rspec'
+alias be='bundle exec'
+
+#====================
+# Git
+#====================
+
+alias gs='git status -s'
+alias gsl='git shortlog -sn'
+alias gcm='git commit -m'
+alias gca='git commit -a'
+alias gcb='git checkout -b'
+alias b="git for-each-ref --sort='-authordate' --format='%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+alias ga='git add .; git status -s'
+alias cl="git checkout master; git fetch; git pull"
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+## add command for local changes to master
+alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
+
+##====================
+## The 'ls' Family
+##====================
+
+alias ls='exa -hF'           # add colors for filetype recognition
+alias la='exa -la'           # show hidden files
+
+#====================
+# Navigation
+#====================
+
+alias bwd='pwd | sed -e "s:/:🥖:g"'
+alias ..='cd ..; bwd'
+alias ...='cd ../..; bwd'
+alias ....='cd ../../..; bwd'
+alias .....='cd ../../../..; bwd'

@@ -1,79 +1,42 @@
-#===================
-# Dotfiles tracking alias
-#===================
-dots() {
-   /usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME $@
-}
+#==============================
+# source anything inside .bash
+#==============================
+
+for rcfile in ~/.bash/*; do
+  source "$rcfile"
+done
+unset rcfile
 
 #====================
-# Miscellaneous aliases
+# Stuff not to track
 #====================
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-
-#====================
-# Ruby
-#====================
-alias bi='bundle install'
-alias ber='bundle exec rspec'
-alias be='bundle exec'
-
-# Run a command in each subdirectory of a
-# git tracked directory that has a Gemfile.
-in_each_ruby_dir(){
-  local root=$(git rev-parse --show-toplevel)
-  cd $root
-
-  for g in $(find . -name 'Gemfile'); do
-    pushd $(dirname ${g})
-    $@
-    popd
-  done
-}
-
-# run rubocop on files changed since the base branch that are under the current dir
-rubo() {
-  local current_branch=$(git rev-parse --abbrev-ref HEAD)
-  local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent master) | sed -ne 's/^ //p' | head -1)
-  git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs bundle exec rubocop --auto-correct
-}
+source ~/.private-config
 
 #====================
-# Git
+# Shell options
+#   docs: https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 #====================
 
-alias gs='git status -s'
-alias gsl='git shortlog -sn'
-alias gcm='git commit -m'
-alias gca='git commit -a'
-alias gcb='git checkout -b'
-alias b="git for-each-ref --sort='-authordate' --format='%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
-alias ga='git add .; git status -s'
-alias cl="git checkout master; git fetch; git pull"
-alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+# If set, Bash matches filenames in a case-insensitive fashion when performing filename expansion.
+shopt -s nocaseglob
 
-## add command for local changes to master
-alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
+# If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
+shopt -s histappend
 
-##====================
-## The 'ls' Family
-##====================
+# If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and a character too many. If a correction is found, the corrected path is printed, and the command proceeds. This option is only used by interactive shells.
+shopt -s cdspell
 
-alias ls='exa -hF'           # add colors for filetype recognition
-alias la='exa -la'           # show hidden files
+# If set, a command name that is the name of a directory is executed as if it were the argument to the cd command. This option is only used by interactive shells.
+shopt -s autocd
+
+# If set, the pattern ‘**’ used in a filename expansion context will match all files and zero or more directories and subdirectories. If the pattern is followed by a ‘/’, only directories and subdirectories match.
+shopt -s globstar
+
+# If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
+shopt -s cmdhist
 
 #====================
-# Navigation
-#====================
-
-alias bwd='pwd | sed -e "s:/:🥖:g"'
-alias ..='cd ..; bwd'
-alias ...='cd ../..; bwd'
-alias ....='cd ../../..; bwd'
-alias .....='cd ../../../..; bwd'
-
-#====================
-# System
-#  This is my bash prompt
+# Bash Prompt
 #====================
 
 if [ "$PLATFORM" = Linux ]; then
@@ -84,178 +47,29 @@ else
   PS1="\[\033[1;34m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
 fi
 
-export BAT_THEME="TwoDark"
-
-#====================
-# Stuff not to git
-#====================
-source ~/.private-config
-
-#====================
-# Language
-#====================
-
-if [[ -z "$LANG" ]]; then
-  export LANG='en_US.UTF-8'
-fi
-
-
 ##========================
-# Add colors to Terminal
-##========================
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-
-#=========================
-# Android studio
-#=========================
-alias android='open -a /Applications/Android\ Studio.app .'
-
-
-##========================
-# FZF
+# FZF bindings, completion, etc.
 ##========================
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-#==================================
-# MAC CONF
-#==================================
-
-notify() {
-	osascript -e "display notification \"$@\" with title \"iterm notification\""
-}
-
-eval "$(direnv hook bash)"
-
-#==================================
-# Switch to large text  in iterm
-#==================================
-set_profile_large_text() {
-  echo -e "\033]50;SetProfile=LargeText\a"
-}
-
-set_profile_default() {
-  echo -e "\033]50;SetProfile=Default\a"
-}
-
-set_profile_light() {
-  echo -e "\033]50;SetProfile=Light\a"
-}
-
-
-#==================================
-# This solves the issue of "There are 3 other sessions using the database"
-#==================================
-function pg_kill_conn() {
-    echo "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid(); \d" | psql template1
-}
-
-##===================================
-# FZF stuff
-##===================================
-
 # binds contrl-p to open fzf view
 bind -x '"\C-p": vim $(fzf);'
 
-fzf-down() {
-  fzf --height 50% "$@" --border
-}
-
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude vendor'
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git'
-[ -n "$NVIM_LISTEN_ADDRESS" ] && export FZF_DEFAULT_OPTS='--no-height'
-
-if [ -x ~/.config/nvim/plugged/fzf.vim/bin/preview.sh ]; then
-  export FZF_CTRL_T_OPTS="--preview '~/.config/nvim/plugged/fzf.vim/bin/preview.sh {} | head -200'"
-fi
-
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
-
-fgl() {
-  [ $# -eq 0 ] && return
-  cd /usr/local/Cellar/figlet/*/share/figlet/fonts
-  local font=$(ls *.flf | sort | fzf --no-multi --reverse --preview "figlet -f {} $@" --preview-window up) &&
-  figlet -f "$font" "$@" | pbcopy
-}
-
-# co - checkout git branch/tag
-co() {
-  local tags branches target
-  tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
-  branches=$(
-    git branch --all | grep -v HEAD             |
-    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
-    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
-  target=$(
-    (echo "$tags"; echo "$branches") | sed '/^$/d' |
-    fzf-down --no-hscroll --reverse --ansi +m -d "\t" -n 2 -q "rowan/$*") || return
-  git checkout $(echo "$target" | awk '{print $2}')
-}
+##========================
+# Direnv hook
+##========================
+eval "$(direnv hook bash)"
 
 #===============================
 # z integration
 #===============================
 
-. ~/.bin/z.sh
-j() {
-  if [[ -z "$*" ]]; then
-    cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
-  else
-    _last_z_args="$@"
-    _z "$@"
-  fi
-}
+source ~/.bin/z.sh
 
-jj() {
-  cd "$(_z -l 2>&1 | sed 's/^[0-9,.]* *//' | fzf -q "$_last_z_args")"
-}
-
-is_in_git_repo() {
-  git rev-parse HEAD > /dev/null 2>&1
-}
-
-gf() {
-  is_in_git_repo || return
-  git -c color.status=always status --short |
-  fzf-down -m --ansi --nth 2..,.. \
-    --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
-  cut -c4- | sed 's/.* -> //'
-}
-
-gb() {
-  is_in_git_repo || return
-  git branch -a --color=always | grep -v '/HEAD\s' | sort |
-  fzf-down --ansi --multi --tac --preview-window right:70% \
-    --preview 'git log --oneline --graph --date=short --color=always --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
-  sed 's/^..//' | cut -d' ' -f1 |
-  sed 's#^remotes/##'
-}
-
-# gh - git commit browse
-gh() {
-  is_in_git_repo || return
-  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
-  fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-    --header 'Press CTRL-S to toggle sort' \
-    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
-  grep -o "[a-f0-9]\{7,\}"
-}
-
-gr() {
-  is_in_git_repo || return
-  git remote -v | awk '{print $1 "\t" $2}' | uniq |
-  fzf-down --tac \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
-  cut -d$'\t' -f1
-}
-
-stash() {
-  is_in_git_repo || return
-  git stash list | fzf-down --reverse -d: --preview 'git show --color=always {1}' |
-  cut -d: -f1
-}
+#===============================
+# fzf fn bindings
+#===============================
 
 if [[ $- =~ i ]]; then
   bind '"\er": redraw-current-line'
@@ -267,53 +81,23 @@ if [[ $- =~ i ]]; then
   # bind '"\C-g\C-s": "$(stash)\e\C-e\er"'
 fi
 
+#===============================
+# TMUX integration on startup.
+#===============================
+#
+# if type tmux &>/dev/null; then
+#   if [ "$TERM" == "xterm-256color" ] && [ "$TERM_PROGRAM" != "iTerm.app" ]; then
+#     source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
+#     [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit; }
+#   fi
+# fi
 
-#===================
-# Experimenetal rails CLI
-#===================
-alias see='ruby --disable=gems /Users/rowanmcdonald/w/see_rails/build/see_rails.rb'
-alias seer='ruby /Users/rowanmcdonald/w/see_rails/build/see_rails.rb'
+#===============================
+# programmable bash completion
+#===============================
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-
-if type tmux &>/dev/null; then
-  if [ "$TERM" == "xterm-256color" ] && [ "$TERM_PROGRAM" != "iTerm.app" ]; then
-    source /Users/rowanmcdonald/p/alacritty/extra/completions/alacritty.bash
-    [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit; }
-  fi
-fi
-
-export RUBYFMT_USE_RELEASE=1
-alias rubyfmt="ruby --disable=all /Users/rowanmcdonald/w/rubyfmt/rubyfmt.rb"
-
-
-
-#===================
-# Toggle dir stack h/t Omar.
-#===================
-
-toggle_top_two_stack() {
-    if [[ "$1" != "" ]]
-    then
-        pushd "$1"
-        return
-    fi
-    if [[ "$top_stack" == "" ]]
-    then
-        tmp_top_stack=$(pwd)
-        tmp_top_stack_display=$(pwd | sed "s#$HOME# ~#")
-        popd >/dev/null
-        if [[ "$?" == "0" ]]
-        then
-            top_stack="$tmp_top_stack"
-            top_stack_display="$tmp_top_stack_display"
-        else
-            echo "nowhere to go"
-        fi
-    else
-        pushd "$top_stack" >/dev/null
-        top_stack=""
-        top_stack_display=""
-    fi
-    export top_stack
-}
-alias kk="toggle_top_two_stack"
+#===============================
+# startup rbenv
+#===============================
+eval "$(rbenv init -)"
