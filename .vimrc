@@ -471,6 +471,7 @@ nnoremap <Leader>s :Startify<cr>
 " coq
 nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
 nnoremap <silent> <space>y  :<C-u>CocList yank<cr>
+nnoremap <silent> <space>b  :<C-u>CocList buffers<cr>
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
@@ -651,11 +652,14 @@ let g:startify_bookmarks = [
       \ {'bb': '~/w/for_business/b4b/'},
       \ {'bcore': '~/w/for_business/b4b_core/'},
       \ {'ch': '~/w/retail/checking/'},
+      \ {'bk': '~/w/retail/broker-dealer/'},
+      \ {'bkc': '~/w/retail/broker_dealer_core/'},
       \ {'clc': '~/w/for_business/clinic/'},
       \ {'rt': '~/w/retail/retail/'},
-      \ {'recore': '~/w/retail/retail_core/'},
+      \ {'inv': '~/w/retail/investing/'},
       \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
       \ {'rc': '~/.vimrc'},
+      \ {'log': '~/w/career-development/logs/now_on.md'},
       \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD

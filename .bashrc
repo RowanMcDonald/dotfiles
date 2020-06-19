@@ -43,6 +43,12 @@ if [ "$PLATFORM" = Linux ]; then
   PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
   PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
 else
+  # __mini_path() {
+  #   local path=${PWD/${HOME}/\~}
+  #   local current_dir=${path##*/}
+  #   IFS='/' path=$(for segment in ${path}; do printf '%s/' "${segment:0:1}"; done;)
+  #   echo "${path%/*}${current_dir:1}"
+  # }
   __git_ps1() { :;}
   PS1="\[\033[1;34m\]\$(__git_ps1)\[\033[0m\] \W ╣ "
 fi
@@ -51,7 +57,7 @@ fi
 # FZF bindings, completion, etc.
 ##========================
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # binds contrl-p to open fzf view
 bind -x '"\C-p": vim $(fzf);'
@@ -60,12 +66,6 @@ bind -x '"\C-p": vim $(fzf);'
 # Direnv hook
 ##========================
 eval "$(direnv hook bash)"
-
-#===============================
-# z integration
-#===============================
-
-source ~/.bin/z.sh
 
 #===============================
 # fzf fn bindings
@@ -95,9 +95,17 @@ fi
 #===============================
 # programmable bash completion
 #===============================
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
+  # Not much point in having completion && auto jump in neovim test shells
+  [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion;
+  source ~/.bin/z.sh
+fi
+
 
 #===============================
 # startup rbenv
 #===============================
-eval "$(rbenv init -)"
+# Note, i'm not booting jenv, pyenv, and nodenv, opt in when you need those.
+# Also, will have to manually refresh. But it's so much faster!
+eval "$(rbenv init - --no-rehash)"

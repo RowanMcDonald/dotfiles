@@ -46,3 +46,6 @@ alias ..='cd ..; bwd'
 alias ...='cd ../..; bwd'
 alias ....='cd ../../..; bwd'
 alias .....='cd ../../../..; bwd'
+
+
+alias rgf='rg --files | rg'

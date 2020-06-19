@@ -6,6 +6,7 @@
 # Ugh, not switching to zsh
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
+export DIRENV_LOG_FORMAT=
 export EDITOR=/usr/local/bin/nvim
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export VISUAL='nvim'
@@ -52,3 +53,7 @@ export HISTIGNORE='ls:bg:fg:history:gl:gs:gcm:cl:vim:v:tldr:exit:* --help'
 export HISTTIMEFORMAT='%F %T '
 # Store history as it is written
 
+
+export RUBYFMT_USE_RELEASE=1
+# Disable profile for vim test
+export SPEC_OPTS='--no-profile'
