@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby --disable-gems
+
+raise 'Must be in a ruby project with a Gemfile' unless File.file?(Dir.pwd + '/Gemfile')
+
+class F
+  LAST_EXT = /\.[^.]+\z/
+  SPEC_FILES = `git ls-files | rg spec/`.split
+
+  attr_reader :path, :top, :type, :ns, :type, :ext, :name
+  def initialize(path)
+    @path = path; parts = path.split('/')
+    @name = parts.pop
+    @top = parts.shift
+    @type, *@ns = parts
+    if @name and match = @name.match(LAST_EXT) then @ext = match[0] end
+  end
+
+  def app?; top == 'app'; end; def lib?; top == 'lib'; end; def spec?; top == 'spec'; end
+  def ruby?; ext == '.rb'; end; def erb?; ext == '.erb'; end
+  def controller?; type == 'controllers'; end
+
+  def spec_name;
+    @spec_name ||= if ruby?
+      spec? ? name : name.gsub('.rb', '_spec.rb')
+    elsif erb?
+      name + '_spec.rb'
+    end
+  end
+
+  def name_matches; SPEC_FILES.select { |f| f.end_with? spec_name }; end
+
+  def semantic_matches
+    [].tap do |matches|
+      match = ['spec', type, *ns, spec_name].join('/')
+      matches << match if File.file? match
+      if controller?
+        match = ['spec', 'requests', *ns, spec_name.gsub('_controller', '')].join('/')
+        matches << match if File.file? match
+      end
+    end
+  end
+
+  def specs
+    @specs ||= if spec?
+      [path]
+    elsif lib?
+      name_matches
+    elsif app?
+      semantic_matches.tap { |ms| ms = ms + name_matches unless ms.any? }
+    else
+      []
+    end
+  end
+end
+
+def files
+  to = `git rev-parse HEAD`.strip
+  from = `git rev-parse origin/HEAD`.strip
+  committed = `git diff-tree -r --name-only --relative #{from} #{to}`.split
+  uncommitted = `git status -s --no-renames`.split("\n").map(&:split).map { |v| v[1] }
+  (uncommitted + committed).map { |path| F.new(path) }
+end
+
+puts files.flat_map(&:specs).join ' '
