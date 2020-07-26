@@ -100,6 +100,11 @@ if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
   # Not much point in having completion && auto jump in neovim test shells
   [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion;
   source ~/.bin/z.sh
+
+  # if type nodenv &> /dev/null; then
+  #   export PATH="$HOME/.nodenv/bin:$PATH"
+  #   eval "$(nodenv init -)"
+  # fi
 fi
 
 

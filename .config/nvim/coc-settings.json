@@ -9,5 +9,12 @@
     "gitcommit"
   ],
   "coc.source.word.filetypes": ["markdown"],
-  "yank.highlight.duration": 300
+  "yank.highlight.duration": 300,
+  "languageserver": {
+    "rust": {
+      "command": "rust-analyzer",
+      "filetypes": ["rust"],
+      "rootPatterns": ["Cargo.toml"]
+    }
+  }
 }

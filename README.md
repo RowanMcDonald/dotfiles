@@ -29,3 +29,6 @@ TIL
  2. the meta key for bash readline is `esc` -> CAPS 
  3. cut and paste with ctrl-k ctrl-y
  https://readline.kablamo.org/emacs.html
+
+
+Setup something that raises if config files are dirty.

@@ -8,7 +8,8 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 export DIRENV_LOG_FORMAT=
 export EDITOR=/usr/local/bin/nvim
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
 export VISUAL='nvim'
 export INPUTRC="$HOME/.inputrc"
 export RIPGREP_CONFIG_PATH=~/.rgrc
@@ -49,7 +50,7 @@ export HISTSIZE=1000000
 # Ignore duplicate commands + those starting with a space
 export HISTCONTROL=ignoreboth
 # Ignore common commands
-export HISTIGNORE='ls:bg:fg:history:gl:gs:gcm:cl:vim:v:tldr:exit:* --help'
+export HISTIGNORE='ls:bg:fg:history:gl:gs:gcm:cl:vim:tldr:exit:* --help'
 export HISTTIMEFORMAT='%F %T '
 # Store history as it is written
 

@@ -17,3 +17,4 @@ export PROMPT_COMMAND='history -a'
 
 # set +x
 # exec 2>&3 3>&-
+eval "$(rbenv init - --no-rehash)"

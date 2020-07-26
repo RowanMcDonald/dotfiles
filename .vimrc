@@ -16,8 +16,6 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'christoomey/vim-tmux-navigator'    " beautiful plugin, not using tmux rn
 " Plug 'kien/ctrlp.vim'                    "  out-growing ctrl-p, 😭
 " Plug 'rhysd/git-messenger.vim'           " nice but not needed rn
-" Plug 'mattn/gist-vim'                    " rarely use
-"   Plug 'mattn/webapi-vim'
 " Plug 'SirVer/ultisnips'                  " someday I'll get a working snippets config
 " Plug 'danchoi/ri.vim', { 'for': 'ruby' } " coc provides this behavior
 " Plug 'ecomba/vim-ruby-refactoring'       " usually can't remember the shortcuts
@@ -34,11 +32,11 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'chemzqm/denite-git'
 " Plug 'junegunn/vim-easy-align' I just never use it.
+" Plug 'wincent/ferret' " could simplify with grep
 
 Plug 'tpope/vim-sensible' " normal defaults
 
 " Find and replace using quickfix
-Plug 'wincent/ferret' " probably don't need this, could simplify with grep
 Plug 'stefandtw/quickfix-reflector.vim'
 
 Plug 'tpope/vim-unimpaired' " faster quickfix nav
@@ -63,6 +61,8 @@ Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
 " integrations
 Plug 'tpope/vim-fugitive'  " git commit
   Plug 'tpope/vim-rhubarb' " Enables :Gbrowse
+Plug 'mattn/gist-vim', { 'on': 'Gist' }
+  Plug 'mattn/webapi-vim', { 'on': 'Gist' }
 
 " look and feel
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
@@ -73,7 +73,7 @@ Plug 'itchyny/lightline.vim' " status line
 " coc plugins
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
@@ -87,9 +87,6 @@ Plug 'neoclide/coc-jest', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
-Plug 'honza/vim-snippets'
-
-
 " Ruby Support
 Plug 'tpope/vim-endwise' " adds end while you're typing
 Plug 'tpope/vim-rails'
@@ -97,8 +94,9 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 " Gemfile.lock changes working dir, Gemfile does not
 
-Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
-  Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
+" Not using rn b/c most gems aren't strict about file / spec correspondence
+" Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
+"   Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
 
 " other languages
 Plug 'rust-lang/rust.vim'
@@ -127,12 +125,13 @@ Plug 'darfink/vim-plist'
 Plug 'janko-m/vim-test' " language agnostic test running
 Plug 'kassio/neoterm'
 
-" Text obj
-Plug 'glts/vim-textobj-comment'
- Plug 'kana/vim-textobj-user'
+" Just have never used, lol
+" Plug 'glts/vim-textobj-comment'
+"  Plug 'kana/vim-textobj-user'
 
-Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
+" Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
 call plug#end()
+
 " }}}
 
 " General {{{
@@ -270,11 +269,15 @@ let g:limelight_eop = '\ze\n^\s'
 "========================
 " hides --insert--
 set noshowmode
+set laststatus=2
+if !has('gui_running')
+  set t_Co=256
+endif
 let g:lightline = {
       \ 'colorscheme': 'onedark',
       \ 'active': {
       \   'left': [ [ 'mode' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \             [ 'gitbranch' ], [ 'readonly', 'filename', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ], [ 'filetype' ], [ 'fileformat' ] ]
       \ },
       \ 'component_function': {
@@ -282,6 +285,15 @@ let g:lightline = {
       \   'cocstatus': 'coc#status'
       \ },
       \ }
+
+augroup netrw_init
+  autocmd!
+  autocmd filetype netrw call NetrwInit()
+augroup END
+
+function! NetrwInit()
+  call lightline#enable()
+endfunction
 
 " }}}
 
@@ -659,10 +671,11 @@ let g:startify_bookmarks = [
       \ {'inv': '~/w/retail/investing/'},
       \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
       \ {'rc': '~/.vimrc'},
-      \ {'log': '~/w/career-development/logs/now_on.md'},
       \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD
+autocmd User Startified call lightline#update()
+
 " }}}
 
 " Settings for Coc {{{
