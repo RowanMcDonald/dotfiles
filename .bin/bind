@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require 'pry'
+
+Pry::CLI.start(nil)
+
+# single_line = ARGV.delete('-l')
+# code = eval("Proc.new { #{ARGV.join(' ')} }")
+# single_line ? STDIN.each { |l| execute(l.chomp, code) } : execute(STDIN.each_line, code)

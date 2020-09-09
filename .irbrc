@@ -11,7 +11,7 @@ ENV['HOME'] ||= ENV['USERPROFILE'] || File.dirname(__FILE__)
   end
 end
 
-# (Pry.start; exit) if defined?(Pry)
+(Pry.start; exit) if defined?(Pry)
 
 IRB.conf[:AUTO_INDENT] = true
 IRB.conf[:LOAD_MODULES] |= %w(irb/completion stringio enumerator ostruct)

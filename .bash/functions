@@ -20,7 +20,7 @@ in_each_ruby_dir(){
 # run rubocop on files changed since the base branch that are under the current dir
 rubo() {
   local current_branch=$(git rev-parse --abbrev-ref HEAD)
-  local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent master) | sed -ne 's/^ //p' | head -1)
+  local base_commit_of_branch=$(diff -u <(git rev-list --first-parent $current_branch) <(git rev-list --first-parent main) | sed -ne 's/^ //p' | head -1)
   git diff-tree -r --no-commit-id --name-only --relative head $base_commit_of_branch | xargs ls -d 2>/dev/null | xargs bundle exec rubocop --auto-correct
 }
 

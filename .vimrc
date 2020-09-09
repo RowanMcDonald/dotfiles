@@ -669,6 +669,7 @@ let g:startify_bookmarks = [
       \ {'clc': '~/w/for_business/clinic/'},
       \ {'rt': '~/w/retail/retail/'},
       \ {'inv': '~/w/retail/investing/'},
+      \ {'bc': '~/w/retail/b4c/'},
       \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
       \ {'rc': '~/.vimrc'},
       \ ]

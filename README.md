@@ -32,3 +32,5 @@ TIL
 
 
 Setup something that raises if config files are dirty.
+
+rg --vimgrep  |  wc -l

@@ -56,7 +56,7 @@ end
 def files
   to = `git rev-parse HEAD`.strip
   from = `git rev-parse origin/HEAD`.strip
-  committed = `git diff-tree -r --name-only --relative #{from} #{to}`.split
+  committed = `git diff-tree -r --name-only --relative --diff-filter=d #{from} #{to}`.split
   uncommitted = `git status -s --no-renames`.split("\n").map(&:split).map { |v| v[1] }
   (uncommitted + committed).map { |path| F.new(path) }
 end
