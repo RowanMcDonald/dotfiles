@@ -3,7 +3,6 @@
 #====================
 # Ruby
 #====================
-
 # Run a command in each subdirectory of a
 # git tracked directory that has a Gemfile.
 in_each_ruby_dir(){
@@ -153,6 +152,14 @@ stash() {
   cut -d: -f1
 }
 
+# https://github.com/HipsterBrown/hip-dotfiles/blob/ddb12e35a2992afa216ce03a74cc26f88d392c29/.zshrc#L61
+gd() {
+  local branches branch
+  branches=$(git branch --all) &&
+  branch=$(echo "$branches" | fzf-down --no-hscroll --reverse --ansi -m -q "rowan/$*") &&
+    git branch -D $(echo "$branch" | sed "s/.* //")
+}
+
 #===================
 # Toggle dir stack h/t Omar.
 #===================
@@ -183,3 +190,8 @@ toggle_top_two_stack() {
     export top_stack
 }
 alias kk="toggle_top_two_stack"
+
+
+how_many() {
+  rg -F --vimgrep $1 | wc -l
+}

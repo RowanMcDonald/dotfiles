@@ -33,6 +33,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'chemzqm/denite-git'
 " Plug 'junegunn/vim-easy-align' I just never use it.
 " Plug 'wincent/ferret' " could simplify with grep
+" Plug 'ruanyl/vim-gh-line'
 
 Plug 'tpope/vim-sensible' " normal defaults
 
@@ -130,6 +131,7 @@ Plug 'kassio/neoterm'
 "  Plug 'kana/vim-textobj-user'
 
 " Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
+
 call plug#end()
 
 " }}}
@@ -488,9 +490,12 @@ nnoremap <silent> <space>b  :<C-u>CocList buffers<cr>
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
+nmap <silent> <leader>cp :let @+ = expand("%")<CR>
+
 "tags!
 nmap <silent> gt <C-]><CR>
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
 " }}}
 
 " FZF support {{{

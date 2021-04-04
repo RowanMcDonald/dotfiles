@@ -34,3 +34,9 @@ TIL
 Setup something that raises if config files are dirty.
 
 rg --vimgrep  |  wc -l
+
+How does `:g/-/norm nD` work?  https://stackoverflow.com/questions/37293734/vim-delete-starting-from-character-to-end-of-line
+
+Navigate quickfix lists
+:cold
+https://thepugautomatic.com/2014/03/stacked-vim-searches-down-cold/

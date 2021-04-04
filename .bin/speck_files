@@ -27,7 +27,9 @@ class F
     end
   end
 
-  def name_matches; SPEC_FILES.select { |f| f.end_with? spec_name }; end
+  def name_matches
+    SPEC_FILES.select { |f| f && spec_name && f.end_with?(spec_name) }
+  end
 
   def semantic_matches
     [].tap do |matches|
@@ -61,4 +63,4 @@ def files
   (uncommitted + committed).map { |path| F.new(path) }
 end
 
-puts files.flat_map(&:specs).join ' '
+puts files.flat_map(&:specs).uniq.join ' '

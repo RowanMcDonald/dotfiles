@@ -114,3 +114,9 @@ fi
 # Note, i'm not booting jenv, pyenv, and nodenv, opt in when you need those.
 # Also, will have to manually refresh. But it's so much faster!
 eval "$(rbenv init - --no-rehash)"
+
+source "$HOME/.bootstrap/env.sh"
+
+export PATH="$PATH:$HOME/.pub-cache/bin"
+
+export PATH="$PATH:$HOME/fvm/default/bin"

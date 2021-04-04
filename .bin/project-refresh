@@ -91,7 +91,10 @@ Repo = Struct.new(:name, :owner) do
     end
   end
 
-  def pull!; `git checkout master; git fetch; git pull`; end
+  def pull!
+    `git checkout master; git fetch; git pull`
+    `git checkout main; git fetch; git pull`
+  end
 
   def clone!; `hub clone #{owner}/#{name}`; end
 end
