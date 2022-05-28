@@ -27,6 +27,7 @@ alias ga='git add .; git status -s'
 alias cl="git checkout main; git fetch; git pull"
 alias cl_="git checkout master; git fetch; git pull"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset - %s %C(yellow)%d%Creset %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gp='git push -u origin HEAD'
 
 ## add command for local changes
 alias gcl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit master..git branch | grep \* | cut -d ' ' -f2"
@@ -84,3 +85,7 @@ read -r -d '' SUDOPROMPT << EOM
 EOM
 
 alias prettyplease="sudo -p '$SUDOPROMPT'"
+
+alias prettygource="gource -1080x800 --hide mouse,filenames --seconds-per-day .2 --file-idle-time 0 --highlight-users --multi-sampling --key"
+
+alias f="fly -t zoe_ci"

@@ -15,7 +15,6 @@ export INPUTRC="$HOME/.inputrc"
 export RIPGREP_CONFIG_PATH=~/.rgrc
 
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
 
 export BAT_THEME="TwoDark"
 export LANG='en_US.UTF-8'
@@ -58,3 +57,9 @@ export HISTTIMEFORMAT='%F %T '
 export RUBYFMT_USE_RELEASE=1
 # Disable profile for vim test
 export SPEC_OPTS='--no-profile'
+
+
+export CDPATH=".:~/w/core"
+export SPRING_ENABLED="true"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+# export DISABLE_PRECOMPILE="true"

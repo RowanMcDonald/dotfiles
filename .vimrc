@@ -7,6 +7,8 @@
 " Plugins {{{
 
 call plug#begin('~/.config/nvim/plugged')
+" Plug 'neovim/nvim-lspconfig'
+
 "============================
 " Plugin graveyard
 "============================
@@ -35,6 +37,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'wincent/ferret' " could simplify with grep
 " Plug 'ruanyl/vim-gh-line'
 
+
 Plug 'tpope/vim-sensible' " normal defaults
 
 " Find and replace using quickfix
@@ -54,7 +57,7 @@ Plug 'arthurxavierx/vim-caser'
 Plug 'dbakker/vim-projectroot'
 Plug 'unblevable/quick-scope' " movement hints with f
 Plug 'tpope/vim-vinegar' " netrw+
-Plug 'mhinz/vim-startify'
+Plug 'RowanMcDonald/vim-transtartify'
 
 " Search
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
@@ -97,7 +100,7 @@ Plug 'tpope/vim-bundler' " adds gf to Gemfile/ Gemfile.lock
 
 " Not using rn b/c most gems aren't strict about file / spec correspondence
 " Plug 'tpope/vim-rake' " adds vim-rails like nav for gems
-"   Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
+Plug 'tpope/vim-projectionist' " cannot use with @ in path, fork?
 
 " other languages
 Plug 'rust-lang/rust.vim'
@@ -131,6 +134,9 @@ Plug 'kassio/neoterm'
 "  Plug 'kana/vim-textobj-user'
 
 " Plug 'junegunn/vim-xmark', { 'for': 'markdown' }
+"
+
+" Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -181,6 +187,12 @@ set wildignore+=.DS_Store,.git,.hg,.svn
 set wildignore+=*~,*.swp,*.tmp
 set wildignore+=node_modules/*,bower_components/*
 
+""======================
+" Fold settings
+""======================
+set foldmethod=syntax
+set nofoldenable
+
 " }}}
 
 " Lang plugins {{{
@@ -188,11 +200,11 @@ set wildignore+=node_modules/*,bower_components/*
 "=========================
 " Plugin dependecies
 "=========================
-let g:python_host_prog = '~/.pyenv/versions/2.7.15/bin/python'
-let g:python3_host_prog = '~/.pyenv/versions/3.7.2/bin/python'
+" let g:python_host_prog = '~/.pyenv/versions/2.7.15/bin/python'
+" let g:python3_host_prog = '~/.pyenv/versions/3.9.7/bin/python'
 
-let g:python_host_skip_check=1
-let g:python3_host_skip_check=1
+" let g:python_host_skip_check=1
+" let g:python3_host_skip_check=1
 
 let g:ruby_path = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
 let g:ruby_host_prog = '/Users/rowanmcdonald/.rbenv/versions/2.6.1/bin/ruby'
@@ -253,7 +265,7 @@ nnoremap <f10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> 
 " Set split to grey line
 set fillchars+=vert:\|
 hi VertSplit cterm=NONE ctermfg=NONE
-hi EndOfBuffer ctermfg=black ctermbg=black
+" hi EndOfBuffer ctermfg=black ctermbg=black
 hi HighlightedyankRegion ctermfg=darkgrey ctermbg=0
 
 "==================
@@ -388,7 +400,7 @@ let g:rails_projections = {
       \   "spec/requests/*_spec.rb": {
       \      "command": "request",
       \      "alternate": "app/controllers/{}_controller.rb",
-      \      "template": "require 'rails_helper'\n\n" .
+      \      "template": "require \"rails_helper\"\n\n" .
       \        "RSpec.describe '{}' do\nend",
       \   },
       \   "app/models/*.rb": {
@@ -402,18 +414,37 @@ let g:rails_projections = {
       \   "spec/models/*_spec.rb": {
       \     "affinity": "model",
       \     "template": [
-      \       "require 'rails_helper'",
+      \       "require \"rails_helper\"",
       \       "",
       \       "RSpec.describe {camelcase|capitalize|colons} do",
       \       "  subject {open} described_class.new {close}",
       \       "",
-      \       "  describe 'validations' do",
-      \       "    it 'adds an error...' do",
+      \       "  describe \"validations\" do",
+      \       "    it \"adds an error...\" do",
       \       "    end",
       \       "  end",
       \       "",
-      \       "  describe '#save!' do",
-      \       "    it 'saves x...' do",
+      \       "  describe \"#save!\" do",
+      \       "    it \"saves x...\" do",
+      \       "    end",
+      \       "  end",
+      \       "end"
+      \     ],
+      \     "type": "unit test"
+      \   },
+      \   "spec/jobs/*_spec.rb": {
+      \     "affinity": "model",
+      \     "template": [
+      \       "require \"rails_helper\"",
+      \       "",
+      \       "RSpec.describe {camelcase|capitalize|colons} do",
+      \       "  subject {open} described_class.new {close}",
+      \       "",
+      \       "  describe \"perform\" do",
+      \       "    it \"adds does xyz...\" do",
+      \       "      expect {open}",
+      \       "        subject.perform",
+      \       "      {close}.to change {}.from().to()",
       \       "    end",
       \       "  end",
       \       "end"
@@ -495,6 +526,9 @@ nmap <silent> <leader>cp :let @+ = expand("%")<CR>
 "tags!
 nmap <silent> gt <C-]><CR>
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" git
+nmap <silent> <Leader>g :Git<CR>
 
 " }}}
 
@@ -641,9 +675,9 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 " }}}
 
 " Startify options {{{
-let g:startify_custom_header_quotes = [
-    \ ["Moo"],
-    \ ]
+" let g:startify_custom_header_quotes = [
+"     \ ["✨💖T4T 💕✨"],
+"     \ ]
 
 function! s:list_commits()
   let git = 'git'
@@ -664,19 +698,12 @@ let g:startify_enable_special = 0
 let g:startify_session_persistence = 1
 let g:startify_files_number=20
 let g:startify_bookmarks = [
-      \ {'aa': '~/w/for_business/auditable_actions/'},
-      \ {'b@': '~/w/for_business/@betterment/b4b/'},
-      \ {'bb': '~/w/for_business/b4b/'},
-      \ {'bcore': '~/w/for_business/b4b_core/'},
-      \ {'ch': '~/w/retail/checking/'},
-      \ {'bk': '~/w/retail/broker-dealer/'},
-      \ {'bkc': '~/w/retail/broker_dealer_core/'},
-      \ {'clc': '~/w/for_business/clinic/'},
-      \ {'rt': '~/w/retail/retail/'},
-      \ {'inv': '~/w/retail/investing/'},
-      \ {'bc': '~/w/retail/b4c/'},
-      \ {'2020': '~/Dropbox\ \(Betterment\)/Betterment\ Development/database_changes/2020/'},
       \ {'rc': '~/.vimrc'},
+      \ {'a': '~/w/core/accounting'},
+      \ {'b': '~/w/core/backoffice'},
+      \ {'f': '~/w/core/foundation'},
+      \ {'p': '~/w/core/porch'},
+      \ {'w': '~/w/core/workshop'},
       \ ]
 
 autocmd User StartifyBufferOpened ProjectRootCD
@@ -826,3 +853,61 @@ endfunction
 command! -range Bashrockets :<line1>,<line2>call s:bashrockets() | update
 command! -range Hashrockets :<line1>,<line2>call s:hashrockets() | update
 " }}}
+
+
+
+" lua << EOF
+" require'lspconfig'.solargraph.setup{}
+" EOF
+
+
+" lua << EOF
+" local nvim_lsp = require('lspconfig')
+
+" -- Use an on_attach function to only map the following keys
+" -- after the language server attaches to the current buffer
+" local on_attach = function(client, bufnr)
+"   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+"   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+"   -- Enable completion triggered by <c-x><c-o>
+"   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+"   -- Mappings.
+"   local opts = { noremap=true, silent=true }
+
+"   -- See `:help vim.lsp.*` for documentation on any of the below functions
+"   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+"   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+"   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+"   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+"   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+"   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+"   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+"   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+"   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+"   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+"   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+"   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+"   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+"   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+"   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+"   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+"   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+" end
+
+" -- Use a loop to conveniently call 'setup' on multiple servers and
+" -- map buffer local keybindings when the language server attaches
+" local servers = { 'pyright', 'rust_analyzer', 'tsserver' }
+" for _, lsp in ipairs(servers) do
+"   nvim_lsp[lsp].setup {
+"     on_attach = on_attach,
+"     flags = {
+"       debounce_text_changes = 150,
+"     }
+"   }
+" end
+" EOF
+"
+"

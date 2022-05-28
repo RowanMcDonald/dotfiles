@@ -5,7 +5,7 @@
 # set -x
 
 export PATH="$HOME/.bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
+# export PATH="$HOME/.rbenv/bin:$PATH"
 # export PATH="/usr/local/sbin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 # export PATH="$HOME/.nimble/bin:$PATH"
@@ -17,7 +17,7 @@ export PROMPT_COMMAND='history -a'
 
 # set +x
 # exec 2>&3 3>&-
-eval "$(rbenv init - --no-rehash)"
+# eval "$(rbenv init - --no-rehash)"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
@@ -59,3 +59,10 @@ function _rakecomplete() {
 }
 
 complete -o default -o nospace -F _rakecomplete rake
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+
+# Use chruby
+source $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
+RUBIES+=(~/.rbenv/versions/*)
+source $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh

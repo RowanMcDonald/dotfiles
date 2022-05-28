@@ -9,6 +9,7 @@
     "gitcommit"
   ],
   "coc.source.word.filetypes": ["markdown"],
+  "coc.source.snippets.priority": 100,
   "yank.highlight.duration": 300,
   "languageserver": {
     "rust": {

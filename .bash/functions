@@ -73,6 +73,7 @@ fgl() {
   cd /usr/local/Cellar/figlet/*/share/figlet/fonts
   local font=$(ls *.flf | sort | fzf --no-multi --reverse --preview "figlet -f {} $@" --preview-window up) &&
   figlet -f "$font" "$@" | pbcopy
+  cd -
 }
 
 # co - checkout git branch/tag
@@ -194,4 +195,41 @@ alias kk="toggle_top_two_stack"
 
 how_many() {
   rg -F --vimgrep $1 | wc -l
+}
+
+lint() {
+  bundle exec standardrb;
+  bundle exec erblint --lint-all -a
+  git add .
+  git commit -m "Lint"
+}
+
+function open_pr() {
+  github_url=`git remote -v | awk '/fetch/{print $2}' | sed -Ee 's#(git@|git://)#https://#' -e 's@com:@com/@' -e 's%\.git$%%' | awk '/github/'`;
+  branch_name=`git symbolic-ref HEAD | cut -d"/" -f 3,4`;
+  pr_url=$github_url"/compare/main..."$branch_name
+  open $pr_url;
+}
+
+function gpr() {
+  git push origin HEAD
+
+  if [ $? -eq 0 ]; then
+    open_pr
+  else
+    echo 'failed to push commits and open a pull request.';
+  fi
+}
+
+function ff() {
+  echo "... zoooooommm"
+  git pull origin main --ff-only
+  if [[ -n $(git status --porcelain) ]]; then
+    git add --all
+    git commit --quiet --message=temp
+    git rebase main
+    git reset HEAD~1
+  else
+    git rebase main
+  fi
 }
