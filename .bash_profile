@@ -7,7 +7,6 @@
 export PATH="$HOME/.bin:$PATH"
 # export PATH="$HOME/.rbenv/bin:$PATH"
 # export PATH="/usr/local/sbin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
 # export PATH="$HOME/.nimble/bin:$PATH"
 
 # If we set this after bashrc is sourced, it clobbers both direnv + z
@@ -62,7 +61,9 @@ complete -o default -o nospace -F _rakecomplete rake
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
+
 # Use chruby
-source $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
+source /usr/local/opt/chruby/share/chruby/chruby.sh
 RUBIES+=(~/.rbenv/versions/*)
-source $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh
+source /usr/local/opt/chruby/share/chruby/auto.sh
+. "$HOME/.cargo/env"

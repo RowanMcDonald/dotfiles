@@ -119,3 +119,7 @@ eval "$(nodenv init -)"
 export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export PATH="$PATH:$HOME/fvm/default/bin"
+. "$HOME/.cargo/env"
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
+export PATH="$HOME/.local/bin:$PATH"

@@ -72,24 +72,24 @@ Plug 'mattn/gist-vim', { 'on': 'Gist' }
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'sleep/limelight.vim', { 'on': 'Goyo' }
 Plug 'itchyny/lightline.vim' " status line
-  Plug 'joshdick/onedark.vim'
+  Plug 'navarasu/onedark.nvim'
 
 " coc plugins
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
 " Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
-Plug 'fannheyward/coc-marketplace', {'do': 'yarn install --frozen-lockfile'}
-Plug 'fannheyward/coc-sql', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-jest', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'fannheyward/coc-marketplace', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'fannheyward/coc-sql', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-jest', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
 " Ruby Support
 Plug 'tpope/vim-endwise' " adds end while you're typing
@@ -129,6 +129,10 @@ Plug 'darfink/vim-plist'
 Plug 'janko-m/vim-test' " language agnostic test running
 Plug 'kassio/neoterm'
 
+" Rubyfmt
+source /Users/rowan/w/rubyfmt/editor_plugins/rubyfmt.vim
+let g:rubyfmt_path = '/usr/local/bin/rubyfmt'
+
 " Just have never used, lol
 " Plug 'glts/vim-textobj-comment'
 "  Plug 'kana/vim-textobj-user'
@@ -139,6 +143,8 @@ Plug 'kassio/neoterm'
 " Plug 'github/copilot.vim'
 
 call plug#end()
+
+colorscheme onedark
 
 " }}}
 
@@ -171,7 +177,7 @@ set expandtab
 set nonumber
 set numberwidth=3
 set nohlsearch
-set notermguicolors
+set termguicolors
 set splitbelow splitright
 set undofile
 set undodir=~/.config/nvim/undodir
