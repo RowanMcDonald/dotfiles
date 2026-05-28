@@ -304,7 +304,11 @@ command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 #==============================
 # Prompt
 #==============================
-PROMPT='%F{blue}%f %c ╣ '
+autoload -Uz vcs_info
+zstyle ':vcs_info:git:*' formats ' (%b)'
+zstyle ':vcs_info:*' enable git
+precmd_functions+=(vcs_info)
+PROMPT='%c%F{75}${vcs_info_msg_0_}%f ╣ '
 
 #==============================
 # Key bindings
