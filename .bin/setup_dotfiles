@@ -1,41 +1,72 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "Cloning Dotfiles"
-cd
-function dots {
-   /usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME $@
+echo "==> Cloning dotfiles"
+cd "$HOME"
+
+dots() {
+  /usr/bin/git --git-dir="$HOME/dotfiles/" --work-tree="$HOME" "$@"
 }
-git clone --bare git@github.com:RowanMcDonald/dotfiles.git $HOME/dotfiles
-dots checkout
-if [ $? = 0 ]; then
-  echo "Checked out config.";
-  else
-    mkdir -p .dotfiles-backup
-    echo "Backing up pre-existing dot files.";
-    dots checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .dotfiles-backup/{}
-fi;
+
+# Default to HTTPS so this works on a brand-new machine without SSH keys.
+# Override with: DOTFILES_REPO=git@github.com:RowanMcDonald/dotfiles.git
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/RowanMcDonald/dotfiles.git}"
+
+if [ ! -d "$HOME/dotfiles" ]; then
+  git clone --bare "$DOTFILES_REPO" "$HOME/dotfiles"
+fi
+
+if ! dots checkout 2>/dev/null; then
+  mkdir -p .dotfiles-backup
+  echo "==> Backing up pre-existing dot files."
+  dots checkout 2>&1 | grep -E "\s+\." | awk '{print $1}' | \
+    xargs -I{} mv {} .dotfiles-backup/{}
+  dots checkout
+fi
 dots config --local status.showUntrackedFiles no
 
 touch .private-config
-source .bash_profile
 
-if ! type brew 2> /dev/null; then
-  echo 'installing brew'
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-else
-  brew update
+# Install Homebrew if missing (modern bash-based installer)
+if ! command -v brew &>/dev/null; then
+  echo "==> Installing Homebrew"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-echo "Brew bundle"
-brew bundle
-# pyenv install 2.7.15
-# pyenv install 3.7.2
-# nodenv install 8.15.1
-# brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-# curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-#   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-# vim +'PlugInstall --sync' +qa
-sudo chpass -s /usr/local/bin/bash $USER
-(brew --prefix)/opt/fzf/install
+# Initialize brew in this shell so subsequent commands resolve
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
-cargo install devicon-lookup
+brew update
+echo "==> brew bundle"
+brew bundle --file="$HOME/Brewfile"
+
+# Register Homebrew bash as a valid login shell and switch to it
+BREW_BASH="$(brew --prefix)/bin/bash"
+if [ -x "$BREW_BASH" ] && ! grep -qx "$BREW_BASH" /etc/shells; then
+  echo "==> Adding $BREW_BASH to /etc/shells"
+  echo "$BREW_BASH" | sudo tee -a /etc/shells >/dev/null
+fi
+if [ "$SHELL" != "$BREW_BASH" ]; then
+  chsh -s "$BREW_BASH"
+fi
+
+# fzf key bindings + completion
+"$(brew --prefix)/opt/fzf/install" --all --no-update-rc
+
+# Rust toolchain (rustup-init manages the toolchain; the brew `rustup` is just the installer)
+if command -v rustup-init &>/dev/null && [ ! -d "$HOME/.cargo" ]; then
+  rustup-init -y --no-modify-path
+fi
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+  cargo install devicon-lookup
+fi
+
+# Source the new profile
+source "$HOME/.bash_profile"
+
+echo "==> Done. Restart your terminal."

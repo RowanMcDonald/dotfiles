@@ -7,7 +7,7 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 export DIRENV_LOG_FORMAT=
-export EDITOR=/usr/local/bin/nvim
+export EDITOR=nvim
 export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 export VISUAL='nvim'
@@ -61,5 +61,7 @@ export SPEC_OPTS='--no-profile'
 
 export CDPATH=".:~/w/core"
 export SPRING_ENABLED="true"
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+if command -v brew &>/dev/null; then
+  export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@3)"
+fi
 # export DISABLE_PRECOMPILE="true"

@@ -4,10 +4,14 @@
 # exec 3>&2 2>/tmp/bash_profile_profile.log
 # set -x
 
+# Initialize Homebrew (handles Apple Silicon /opt/homebrew and Intel /usr/local)
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 export PATH="$HOME/.bin:$PATH"
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# export PATH="/usr/local/sbin:$PATH"
-# export PATH="$HOME/.nimble/bin:$PATH"
 
 # If we set this after bashrc is sourced, it clobbers both direnv + z
 export PROMPT_COMMAND='history -a'
@@ -16,9 +20,6 @@ export PROMPT_COMMAND='history -a'
 
 # set +x
 # exec 2>&3 3>&-
-# eval "$(rbenv init - --no-rehash)"
-
-export PATH="$HOME/.poetry/bin:$PATH"
 
 function _rake_cache_path() {
   # If in a Rails app, put the cache in the cache dir
@@ -58,12 +59,5 @@ function _rakecomplete() {
 }
 
 complete -o default -o nospace -F _rakecomplete rake
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
-
-# Use chruby
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-RUBIES+=(~/.rbenv/versions/*)
-source /usr/local/opt/chruby/share/chruby/auto.sh
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

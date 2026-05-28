@@ -10,7 +10,7 @@ unset rcfile
 #====================
 # Stuff not to track
 #====================
-source ~/.private-config
+[ -f ~/.private-config ] && source ~/.private-config
 
 #====================
 # Shell options
@@ -98,28 +98,21 @@ fi
 
 if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
   # Not much point in having completion && auto jump in neovim test shells
-  [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion;
+  if [ -n "$HOMEBREW_PREFIX" ] && [ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+    . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+  fi
   source ~/.bin/z.sh
-
-  # if type nodenv &> /dev/null; then
-  #   export PATH="$HOME/.nodenv/bin:$PATH"
-  #   eval "$(nodenv init -)"
-  # fi
 fi
 
 
 #===============================
-# startup rbenv
+# Version managers (mise replaces rbenv/nodenv/pyenv/chruby)
 #===============================
-# Note, i'm not booting jenv, pyenv, and nodenv, opt in when you need those.
-# Also, will have to manually refresh. But it's so much faster!
-# eval "$(rbenv init - --no-rehash)"
-eval "$(nodenv init -)"
+command -v mise &>/dev/null && eval "$(mise activate bash)"
 
 export PATH="$PATH:$HOME/.pub-cache/bin"
-
 export PATH="$PATH:$HOME/fvm/default/bin"
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-eval "$(atuin init bash)"
+command -v atuin &>/dev/null && eval "$(atuin init bash)"
 export PATH="$HOME/.local/bin:$PATH"

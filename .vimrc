@@ -131,7 +131,7 @@ Plug 'kassio/neoterm'
 
 " Rubyfmt
 source /Users/rowan/w/rubyfmt/editor_plugins/rubyfmt.vim
-let g:rubyfmt_path = '/usr/local/bin/rubyfmt'
+let g:rubyfmt_path = exepath('rubyfmt')
 
 " Just have never used, lol
 " Plug 'glts/vim-textobj-comment'

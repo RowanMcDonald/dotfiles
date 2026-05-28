@@ -70,7 +70,7 @@ fzf-down() {
 # fgl 'some words' - select among figlet fonts form the given string
 fgl() {
   [ $# -eq 0 ] && return
-  cd /usr/local/Cellar/figlet/*/share/figlet/fonts
+  cd "$(brew --prefix figlet)"/share/figlet/fonts
   local font=$(ls *.flf | sort | fzf --no-multi --reverse --preview "figlet -f {} $@" --preview-window up) &&
   figlet -f "$font" "$@" | pbcopy
   cd -
