@@ -44,16 +44,6 @@ brew update
 echo "==> brew bundle"
 brew bundle --file="$HOME/Brewfile"
 
-# Register Homebrew bash as a valid login shell and switch to it
-BREW_BASH="$(brew --prefix)/bin/bash"
-if [ -x "$BREW_BASH" ] && ! grep -qx "$BREW_BASH" /etc/shells; then
-  echo "==> Adding $BREW_BASH to /etc/shells"
-  echo "$BREW_BASH" | sudo tee -a /etc/shells >/dev/null
-fi
-if [ "$SHELL" != "$BREW_BASH" ]; then
-  chsh -s "$BREW_BASH"
-fi
-
 # fzf key bindings + completion
 "$(brew --prefix)/opt/fzf/install" --all --no-update-rc
 
@@ -66,7 +56,4 @@ if [ -f "$HOME/.cargo/env" ]; then
   cargo install devicon-lookup
 fi
 
-# Source the new profile
-source "$HOME/.bash_profile"
-
-echo "==> Done. Restart your terminal."
+echo "==> Done. Restart your terminal (zsh is the macOS default; ~/.zshrc will load)."
