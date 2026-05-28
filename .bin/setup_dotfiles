@@ -9,6 +9,15 @@
 main() {
   set -euo pipefail
 
+  # Xcode Command Line Tools — provides git, make, clang. Required for the
+  # first `git clone` below and for Homebrew. The installer is a GUI dialog;
+  # we wait until it completes before continuing.
+  if ! xcode-select -p &>/dev/null; then
+    echo "==> Installing Xcode Command Line Tools (accept the GUI prompt)"
+    xcode-select --install
+    until xcode-select -p &>/dev/null; do sleep 10; done
+  fi
+
   echo "==> Cloning dotfiles"
   cd "$HOME"
 
