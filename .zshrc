@@ -13,6 +13,7 @@ fi
 path=(
   $HOME/.bin
   $HOME/.local/bin
+  $HOME/.bun/bin
   $path
   $HOME/.pub-cache/bin
   $HOME/fvm/default/bin

@@ -1,59 +1,90 @@
 #!/usr/bin/env bash
-set -euo pipefail
+#
+# Bootstrap a fresh macOS box from a clean state.
+#
+# Safe to pipe into bash because the entire script is wrapped in main():
+# bash parses the whole file before running anything, so a truncated download
+# fails to parse and no partial work happens.
 
-echo "==> Cloning dotfiles"
-cd "$HOME"
+main() {
+  set -euo pipefail
 
-dots() {
-  /usr/bin/git --git-dir="$HOME/dotfiles/" --work-tree="$HOME" "$@"
+  echo "==> Cloning dotfiles"
+  cd "$HOME"
+
+  dots() {
+    /usr/bin/git --git-dir="$HOME/dotfiles/" --work-tree="$HOME" "$@"
+  }
+
+  # HTTPS by default so this works on a brand-new machine with no SSH keys.
+  # Override with: DOTFILES_REPO=git@github.com:RowanMcDonald/dotfiles.git
+  local DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/RowanMcDonald/dotfiles.git}"
+
+  if [ ! -d "$HOME/dotfiles" ]; then
+    git clone --bare "$DOTFILES_REPO" "$HOME/dotfiles"
+  fi
+
+  if ! dots checkout 2>/dev/null; then
+    mkdir -p .dotfiles-backup
+    echo "==> Backing up pre-existing dot files."
+    dots checkout 2>&1 | grep -E "\s+\." | awk '{print $1}' | \
+      xargs -I{} mv {} .dotfiles-backup/{}
+    dots checkout
+  fi
+  dots config --local status.showUntrackedFiles no
+
+  touch .private-config
+
+  # Homebrew
+  if ! command -v brew &>/dev/null; then
+    echo "==> Installing Homebrew"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+
+  brew update
+  echo "==> brew bundle"
+  brew bundle --file="$HOME/Brewfile"
+
+  # fzf key bindings + completion
+  "$(brew --prefix)/opt/fzf/install" --all --no-update-rc
+
+  # Rust toolchain. The brew `rustup` package is just the installer;
+  # rustup-init actually lays down rustc + cargo + default components.
+  if command -v rustup-init &>/dev/null && [ ! -d "$HOME/.cargo" ]; then
+    rustup-init -y --no-modify-path --default-toolchain stable
+  fi
+  if [ -f "$HOME/.cargo/env" ]; then
+    . "$HOME/.cargo/env"
+    rustup component add rust-analyzer rustfmt clippy
+    cargo install devicon-lookup
+  fi
+
+  # mise-managed runtimes (ruby) defined in .config/mise/config.toml
+  if command -v mise &>/dev/null; then
+    echo "==> Installing mise tools"
+    mise install
+    echo "==> Installing global gems"
+    mise exec ruby -- gem install rails
+  fi
+
+  # JS tooling lives under bun, not node.
+  if command -v bun &>/dev/null; then
+    echo "==> Installing global bun packages"
+    bun install -g svgo
+  fi
+
+  # Claude Code (native installer — no node dependency)
+  if ! command -v claude &>/dev/null; then
+    echo "==> Installing Claude Code"
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
+
+  echo "==> Done. Restart your terminal (zsh is the macOS default; ~/.zshrc will load)."
 }
 
-# Default to HTTPS so this works on a brand-new machine without SSH keys.
-# Override with: DOTFILES_REPO=git@github.com:RowanMcDonald/dotfiles.git
-DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/RowanMcDonald/dotfiles.git}"
-
-if [ ! -d "$HOME/dotfiles" ]; then
-  git clone --bare "$DOTFILES_REPO" "$HOME/dotfiles"
-fi
-
-if ! dots checkout 2>/dev/null; then
-  mkdir -p .dotfiles-backup
-  echo "==> Backing up pre-existing dot files."
-  dots checkout 2>&1 | grep -E "\s+\." | awk '{print $1}' | \
-    xargs -I{} mv {} .dotfiles-backup/{}
-  dots checkout
-fi
-dots config --local status.showUntrackedFiles no
-
-touch .private-config
-
-# Install Homebrew if missing (modern bash-based installer)
-if ! command -v brew &>/dev/null; then
-  echo "==> Installing Homebrew"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-# Initialize brew in this shell so subsequent commands resolve
-if [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [ -x /usr/local/bin/brew ]; then
-  eval "$(/usr/local/bin/brew shellenv)"
-fi
-
-brew update
-echo "==> brew bundle"
-brew bundle --file="$HOME/Brewfile"
-
-# fzf key bindings + completion
-"$(brew --prefix)/opt/fzf/install" --all --no-update-rc
-
-# Rust toolchain (rustup-init manages the toolchain; the brew `rustup` is just the installer)
-if command -v rustup-init &>/dev/null && [ ! -d "$HOME/.cargo" ]; then
-  rustup-init -y --no-modify-path
-fi
-if [ -f "$HOME/.cargo/env" ]; then
-  . "$HOME/.cargo/env"
-  cargo install devicon-lookup
-fi
-
-echo "==> Done. Restart your terminal (zsh is the macOS default; ~/.zshrc will load)."
+main "$@"
